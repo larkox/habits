@@ -1,0 +1,208 @@
+diff --git a/node_modules/react-native-calendars/src/agenda/index.d.ts b/node_modules/react-native-calendars/src/agenda/index.d.ts
+index 9e684e3..c95497b 100644
+--- a/node_modules/react-native-calendars/src/agenda/index.d.ts
++++ b/node_modules/react-native-calendars/src/agenda/index.d.ts
+@@ -1,9 +1,9 @@
+ import PropTypes from 'prop-types';
+-import XDate from 'xdate';
+ import React, { Component } from 'react';
+-import { Animated, ViewStyle, LayoutChangeEvent, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+-import { DateData, AgendaSchedule } from '../types';
++import { Animated, LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent, ViewStyle } from 'react-native';
++import XDate from 'xdate';
+ import { CalendarListProps } from '../calendar-list';
++import { AgendaSchedule, DateData } from '../types';
+ import ReservationList, { ReservationListProps } from './reservation-list';
+ export type AgendaProps = CalendarListProps & ReservationListProps & {
+     /** the list of items that have to be displayed in agenda. If you want to render item as empty date
+@@ -135,6 +135,7 @@ export default class Agenda extends Component<AgendaProps, State> {
+         onLongPress?: React.Validator<((date?: DateData | undefined) => void) | null | undefined> | undefined;
+         disableAllTouchEventsForDisabledDays?: React.Validator<boolean | null | undefined> | undefined;
+         disableAllTouchEventsForInactiveDays?: React.Validator<boolean | null | undefined> | undefined;
++        disableAllTouchEvents?: React.Validator<boolean | null | undefined> | undefined;
+         accessibilityLabel?: React.Validator<string | null | undefined> | undefined;
+         children?: React.Validator<React.ReactNode> | undefined;
+         hitSlop?: React.Validator<import("react-native").Insets | null | undefined> | undefined;
+@@ -369,4 +370,5 @@ export default class Agenda extends Component<AgendaProps, State> {
+     renderWeekNumbersSpace: () => false | React.JSX.Element | undefined;
+     render(): React.JSX.Element;
+ }
+-export {};
++export { };
++
+diff --git a/node_modules/react-native-calendars/src/calendar/calendar.api.json b/node_modules/react-native-calendars/src/calendar/calendar.api.json
+index 61d307a..6215416 100644
+--- a/node_modules/react-native-calendars/src/calendar/calendar.api.json
++++ b/node_modules/react-native-calendars/src/calendar/calendar.api.json
+@@ -201,6 +201,11 @@
+       "name": "disableAllTouchEventsForInactiveDays",
+       "type": "boolean",
+       "description": "Whether to disable all touch events for inactive days (can be override with 'disableTouchEvent' in 'markedDates')"
++    },
++    {
++      "name": "disableAllTouchEvents",
++      "type": "boolean",
++      "description": "Whether to disable all touch events for every day (can be override with 'disableTouchEvent' in 'markedDates')"
+     }
+   ]
+ }
+diff --git a/node_modules/react-native-calendars/src/calendar/day/basic/index.d.ts b/node_modules/react-native-calendars/src/calendar/day/basic/index.d.ts
+index 2f36647..2fb66bc 100644
+--- a/node_modules/react-native-calendars/src/calendar/day/basic/index.d.ts
++++ b/node_modules/react-native-calendars/src/calendar/day/basic/index.d.ts
+@@ -1,6 +1,6 @@
+ import React from 'react';
+ import { ViewProps } from 'react-native';
+-import { Theme, DayState, MarkingTypes, DateData } from '../../../types';
++import { DateData, DayState, MarkingTypes, Theme } from '../../../types';
+ import { MarkingProps } from '../marking';
+ export interface BasicDayProps extends ViewProps {
+     /** Theme object */
+@@ -21,6 +21,8 @@ export interface BasicDayProps extends ViewProps {
+     disableAllTouchEventsForDisabledDays?: boolean;
+     /** Disable all touch events for inactive days (can be override with disableTouchEvent in markedDates) */
+     disableAllTouchEventsForInactiveDays?: boolean;
++    /** Disable all touch events for all days (can be override with disableTouchEvent in markedDates) */
++    disableAllTouchEvents?: boolean;
+     /** Accessibility label */
+     accessibilityLabel?: string;
+     /** Test ID */
+diff --git a/node_modules/react-native-calendars/src/calendar/day/basic/index.js b/node_modules/react-native-calendars/src/calendar/day/basic/index.js
+index 31d5d61..0b1e8e5 100644
+--- a/node_modules/react-native-calendars/src/calendar/day/basic/index.js
++++ b/node_modules/react-native-calendars/src/calendar/day/basic/index.js
+@@ -1,10 +1,10 @@
+-import React, { Fragment, useCallback, useRef } from 'react';
+-import { TouchableOpacity, Text, View } from 'react-native';
++import { Fragment, useCallback, useRef } from 'react';
++import { Text, TouchableOpacity, View } from 'react-native';
+ import { xdateToData } from '../../../interface';
+ import Marking from '../marking';
+ import styleConstructor from './style';
+ const BasicDay = (props) => {
+-    const { theme, date, onPress, onLongPress, markingType, marking, state, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, accessibilityLabel, children, testID } = props;
++    const { theme, date, onPress, onLongPress, markingType, marking, state, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, disableAllTouchEvents, accessibilityLabel, children, testID } = props;
+     const dateData = date ? xdateToData(date) : undefined;
+     const style = useRef(styleConstructor(theme));
+     const _marking = marking || {};
+@@ -27,6 +27,9 @@ const BasicDay = (props) => {
+         else if (typeof disableAllTouchEventsForInactiveDays === 'boolean' && isInactive) {
+             disableTouch = disableAllTouchEventsForInactiveDays;
+         }
++        else if (typeof disableAllTouchEvents === 'boolean') {
++            disableTouch = disableAllTouchEvents;
++        }
+         return disableTouch;
+     };
+     const getContainerStyle = () => {
+diff --git a/node_modules/react-native-calendars/src/calendar/day/period/index.d.ts b/node_modules/react-native-calendars/src/calendar/day/period/index.d.ts
+index 1b5b612..615614f 100644
+--- a/node_modules/react-native-calendars/src/calendar/day/period/index.d.ts
++++ b/node_modules/react-native-calendars/src/calendar/day/period/index.d.ts
+@@ -1,7 +1,7 @@
+ import PropTypes from 'prop-types';
+ import React from 'react';
+ import { ViewProps } from 'react-native';
+-import { Theme, DayState, DateData } from '../../../types';
++import { DateData, DayState, Theme } from '../../../types';
+ import { MarkingProps } from '../marking';
+ export interface PeriodDayProps extends ViewProps {
+     theme?: Theme;
+@@ -12,6 +12,7 @@ export interface PeriodDayProps extends ViewProps {
+     date?: string;
+     disableAllTouchEventsForDisabledDays?: boolean;
+     disableAllTouchEventsForInactiveDays?: boolean;
++    disableAllTouchEvents?: boolean;
+     accessibilityLabel?: string;
+     testID?: string;
+ }
+diff --git a/node_modules/react-native-calendars/src/calendar/day/period/index.js b/node_modules/react-native-calendars/src/calendar/day/period/index.js
+index 30695ca..06900e8 100644
+--- a/node_modules/react-native-calendars/src/calendar/day/period/index.js
++++ b/node_modules/react-native-calendars/src/calendar/day/period/index.js
+@@ -1,11 +1,11 @@
+ import PropTypes from 'prop-types';
+-import React, { useCallback, useRef, useMemo } from 'react';
+-import { TouchableWithoutFeedback, TouchableOpacity, Text, View } from 'react-native';
++import { useCallback, useMemo, useRef } from 'react';
++import { Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+ import { xdateToData } from '../../../interface';
+ import Marking from '../marking';
+ import styleConstructor from './style';
+ const PeriodDay = (props) => {
+-    const { theme, date, onPress, onLongPress, marking, state, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, accessibilityLabel, children, testID } = props;
++    const { theme, date, onPress, onLongPress, marking, state, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, disableAllTouchEvents, accessibilityLabel, children, testID } = props;
+     const dateData = date ? xdateToData(date) : undefined;
+     const style = useRef(styleConstructor(theme));
+     const isDisabled = typeof marking?.disabled !== 'undefined' ? marking.disabled : state === 'disabled';
+@@ -23,6 +23,9 @@ const PeriodDay = (props) => {
+         else if (typeof disableAllTouchEventsForInactiveDays === 'boolean' && isInactive) {
+             disableTouch = disableAllTouchEventsForInactiveDays;
+         }
++        else if (typeof disableAllTouchEvents === 'boolean') {
++            disableTouch = disableAllTouchEvents;
++        }
+         return disableTouch;
+     };
+     const markingStyle = useMemo(() => {
+diff --git a/node_modules/react-native-calendars/src/componentUpdater.d.ts b/node_modules/react-native-calendars/src/componentUpdater.d.ts
+index 7496393..034fd66 100644
+--- a/node_modules/react-native-calendars/src/componentUpdater.d.ts
++++ b/node_modules/react-native-calendars/src/componentUpdater.d.ts
+@@ -1,9 +1,9 @@
+ /// <reference types="react" />
+ /// <reference types="xdate" />
+-import { CalendarProps } from './calendar';
+-import { CalendarListProps } from './calendar-list';
+ import { AgendaProps } from './agenda';
+ import { ReservationListProps } from './agenda/reservation-list';
++import { CalendarProps } from './calendar';
++import { CalendarListProps } from './calendar-list';
+ import { MarkingProps } from './calendar/day/marking';
+ export declare function shouldUpdate(props: any, newProps: any, paths: string[]): boolean;
+ export declare function extractComponentProps(component: any, props: any, ignoreProps?: string[]): any;
+@@ -26,6 +26,7 @@ export declare function extractDayProps(props: CalendarProps): {
+     date: string | undefined;
+     disableAllTouchEventsForDisabledDays: boolean | undefined;
+     disableAllTouchEventsForInactiveDays: boolean | undefined;
++    disableAllTouchEvents: boolean | undefined;
+     dayComponent: import("react").ComponentType<import("./calendar/day").DayProps & {
+         date?: import("./types").DateData | undefined;
+     }> | undefined;
+@@ -112,6 +113,7 @@ export declare function extractCalendarProps(props: CalendarListProps): {
+     date?: string | undefined;
+     disableAllTouchEventsForDisabledDays?: boolean | undefined;
+     disableAllTouchEventsForInactiveDays?: boolean | undefined;
++    disableAllTouchEvents?: boolean | undefined;
+     accessibilityLabel?: string | undefined;
+     children?: import("react").ReactNode;
+     hitSlop?: import("react-native").Insets | undefined;
+@@ -358,6 +360,7 @@ export declare function extractCalendarListProps(props: AgendaProps): {
+     onLongPress?: ((date?: import("./types").DateData | undefined) => void) | undefined;
+     disableAllTouchEventsForDisabledDays?: boolean | undefined;
+     disableAllTouchEventsForInactiveDays?: boolean | undefined;
++    disableAllTouchEvents?: boolean | undefined;
+     accessibilityLabel?: string | undefined;
+     children?: import("react").ReactNode;
+     hitSlop?: import("react-native").Insets | undefined;
+diff --git a/node_modules/react-native-calendars/src/componentUpdater.js b/node_modules/react-native-calendars/src/componentUpdater.js
+index 842d22b..d62b93b 100644
+--- a/node_modules/react-native-calendars/src/componentUpdater.js
++++ b/node_modules/react-native-calendars/src/componentUpdater.js
+@@ -36,7 +36,7 @@ export function extractDotProps(props) {
+     return dotProps;
+ }
+ export function extractDayProps(props) {
+-    const { state, marking, markingType, theme, onPress, onLongPress, date, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, dayComponent, testID } = props;
++    const { state, marking, markingType, theme, onPress, onLongPress, date, disableAllTouchEventsForDisabledDays, disableAllTouchEventsForInactiveDays, disableAllTouchEvents, dayComponent, testID } = props;
+     const dayProps = {
+         state,
+         marking,
+@@ -47,6 +47,7 @@ export function extractDayProps(props) {
+         date,
+         disableAllTouchEventsForDisabledDays,
+         disableAllTouchEventsForInactiveDays,
++        disableAllTouchEvents,
+         dayComponent,
+         testID
+     };

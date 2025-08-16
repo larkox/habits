@@ -1,0 +1,56 @@
+{
+	"habits": {
+		"title": "Habits",
+		"addButton": "Add habit",
+		"addHabit": {
+			"title": "Add habit",
+			"inputLabels": {
+				"title": "Title",
+				"periodicity": "Periodicity"
+			},
+			"addButton": "Add"
+		},
+		"editHabit": {
+			"title": "Edit habit",
+			"inputLabels": {
+				"periodicity": "Periodicity",
+				"title": "Title"
+			},
+			"saveButton": "Save"
+		},
+		"due": "Due {{val, relativetime(numeric: auto;)}}",
+		"doButton": "Do",
+		"doneButton": "Done",
+		"deleteButton": "Delete",
+		"doneToday": "Done today"
+	},
+	"charts": {
+		"title": "Charts",
+		"addChart": {
+			"title": "Add new chart",
+			"inputLabels": {
+				"title": "Title",
+				"titlePlaceholder": "Add the chart title"
+			},
+			"addButton": "Add"
+		},
+		"addValue": {
+			"title": "Add new value",
+			"inputLabels": {
+				"value": "Value",
+				"valuePlaceholder": "Add the value for today"
+			},
+			"addButton": "Add",
+			"updateValueButton": "Update"
+		},
+		"addButton": "Add a new chart",
+		"addValueButton": "Add new value",
+		"updateValueButton": "Update value",
+		"deleteButton": "Delete chart"
+	},
+	"tabs": {
+		"habits": "Habits",
+		"charts": "Charts"
+	},
+	"date": "{{val, datetime}}"
+}
