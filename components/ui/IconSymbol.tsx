@@ -19,6 +19,8 @@ const MAPPING: Partial<IconMapping> = {
     'chevron.left.forwardslash.chevron.right': 'code',
     'chevron.right': 'chevron-right',
     'chart.line.downtrend.xyaxis': 'bar-chart',
+    'archivebox.fill': 'archive',
+    'checkmark.app.fill': 'check-circle-outline',
 };
 
 /**

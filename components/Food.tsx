@@ -1,0 +1,70 @@
+import { ThemeColors } from "@/hooks/useThemeColor";
+import { useFood } from "@/store/hooks";
+import { removeFoodFromFridge } from "@/store/storage";
+import { getDue } from "@/utils/time";
+import { useRouter } from "expo-router";
+import { ComponentProps, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { Pressable } from "react-native";
+import Button from "./base/Button";
+import Text from "./base/Text";
+import View from "./base/View";
+
+type Props = {
+    id: string;
+}
+
+export default function Habit({
+    id,
+}: Props) {
+    const food = useFood(id);
+    const [t] = useTranslation();
+    const router = useRouter();
+
+    const eatCallback = useCallback(() => {
+        removeFoodFromFridge(id);
+    }, [id]);
+
+    const longPressCallback = useCallback(() => {
+        router.navigate(`/(tabs)/fridge/edit?id=${id}`);
+    }, [id, router])
+
+    if (!food) {
+        return;
+    }
+
+    const due = getDue(food.date, 0);
+    const overdue = due < 0;
+    let viewColor: ThemeColors = 'foreground';
+    if (overdue) {
+        viewColor = 'foregroundOverdue'
+    }
+    const eatText = t('fridge.eatButton');
+    const dueText = t('fridge.due', {val: due});
+
+    let textContext: ComponentProps<typeof Text>['context'] = 'foreground';
+    if (overdue) {
+        textContext = 'foregroundOverdue';
+    }
+
+    return (
+        <Pressable
+            onLongPress={longPressCallback}
+        >
+            <View
+                color={viewColor}
+                border={'view'}
+                style={{flexDirection: 'row', alignItems: 'center'}}
+            >
+                <View style={{flex: 1, flexShrink: 1}}>
+                    <Text context={textContext}>{food.name}</Text>
+                    <Text context={textContext}>{dueText}</Text>
+                </View>
+                <Button
+                    onPress={eatCallback}
+                    text={eatText}
+                />
+            </View>
+        </Pressable>
+    )
+}

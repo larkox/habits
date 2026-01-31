@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DeviceEventEmitter, EmitterSubscription } from "react-native";
-import { EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_UPDATE_HABIT } from "./constants";
-import { getAllChartIDs, getAllHabits, getChart, getChartValues, getHabit, getHabitCalendar } from "./storage";
+import { EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_FRIDGE_FOOD, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_ADD_TODO, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_REMOVE_FRIDGE_FOOD, EVENT_STORAGE_REMOVE_TODO, EVENT_STORAGE_UPDATE_FRIDGE_FOOD, EVENT_STORAGE_UPDATE_HABIT, EVENT_STORAGE_UPDATE_TODO } from "./constants";
+import { getAllChartIDs, getAllFridgeFood, getAllHabits, getAllTodos, getChart, getChartValues, getFridgeFood, getHabit, getHabitCalendar, getTodo } from "./storage";
 
 function useGenericHook<T>(events: string[], getValue: () => Promise<T|undefined>) {
     const [value, setValue] = useState<T|undefined>(undefined);
@@ -107,4 +107,38 @@ export function useHabitCalendar(id: string, monthStart: number) {
         return getHabitCalendar(id, monthStart);
     }, [id, monthStart]);
     return useGenericHookWithId(id, USE_HABIT_CALENDAR_EVENTS, getCalendarById)
+}
+
+const USE_FRIDGE_FOOD_EVENTS = [
+    EVENT_STORAGE_ADD_FRIDGE_FOOD,
+    EVENT_STORAGE_REMOVE_FRIDGE_FOOD,
+];
+
+export function useFridgeFood() {
+    return useGenericHook(USE_FRIDGE_FOOD_EVENTS, getAllFridgeFood);
+}
+
+const USE_FOOD_EVENTS = [
+    EVENT_STORAGE_UPDATE_FRIDGE_FOOD,
+]
+
+export function useFood(id: string) {
+    return useGenericHookWithId(id, USE_FOOD_EVENTS, getFridgeFood)
+}
+
+const USE_TODOS_EVENTS = [
+    EVENT_STORAGE_ADD_TODO,
+    EVENT_STORAGE_REMOVE_TODO,
+];
+
+export function useTodos() {
+    return useGenericHook(USE_TODOS_EVENTS, getAllTodos);
+}
+
+const USE_TODO_EVENTS = [
+    EVENT_STORAGE_UPDATE_TODO,
+];
+
+export function useTodo(id: string) {
+    return useGenericHookWithId(id, USE_TODO_EVENTS, getTodo)
 }

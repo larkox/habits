@@ -31,6 +31,16 @@ async function initDatabase() {
         date INTEGER,
         FOREIGN KEY (habitId) REFERENCES habits(id)
     )`)
+    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS fridge (
+        id TEXT PRIMARY KEY NOT null,
+        name TEXT,
+        date INTEGER
+    )`)
+    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS todos (
+        id TEXT PRIMARY KEY NOT null,
+        name Text,
+        date INTEGER
+    )`)
     db = newDb;
 }
 

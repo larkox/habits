@@ -1,9 +1,9 @@
-import { Chart, ChartValue, Habit } from "@/types/model";
+import { Chart, ChartValue, FridgeFood, Habit, Todo } from "@/types/model";
 import { newId } from "@/utils/crypto";
 import { logError } from "@/utils/log";
 import { getMonthEnd, getStartOfDay, getYesterday } from "@/utils/time";
 import { getDatabase } from "./db";
-import { sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendRemoveChartEvents, sendRemoveEvents, sendUpdateEvents } from "./events";
+import { sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendAddFridgeFoodEvents, sendAddTodoEvents, sendRemoveChartEvents, sendRemoveEvents, sendRemoveFridgeFoodEvents, sendRemoveTodoEvents, sendUpdateEvents, sendUpdateFridgeFoodEvents } from "./events";
 
 export async function getAllHabits() {
     try {
@@ -155,5 +155,105 @@ export async function getChartValues(chartId: string) {
     } catch (error) {
         logError('error getting chart values', error);
         return [];
+    }
+}
+
+export async function addFridgeFood(name: string, date: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('INSERT INTO fridge (id, name, date) VALUES (?, ?, ?)', newId(), name, date);
+        sendAddFridgeFoodEvents();
+    } catch (error) {
+        logError('errror adding fridge food', error);
+    }
+}
+
+export async function getAllFridgeFood() {
+    try {
+        const db = await getDatabase();
+        const values = await db.getAllAsync<FridgeFood>('SELECT id, name, date FROM fridge');
+        return values;
+    } catch (error) {
+        logError('error getting all fridge food', error);
+        return [];
+    }
+}
+
+export async function getFridgeFood(id: string) {
+    try {
+        const db = await getDatabase();
+        const food = await db.getFirstAsync<FridgeFood>('SELECT id, name, date FROM fridge WHERE id = ?', id);
+        if (!food) {
+            return undefined;
+        }
+        return food;
+    } catch (error) {
+        logError('error getting one fridge food', error);
+        return undefined;
+    }
+}
+
+export async function removeFoodFromFridge(id: string) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('DELETE FROM fridge WHERE id = ?', id);
+        sendRemoveFridgeFoodEvents();
+    } catch (error) {
+        logError('error removing food from fridge', error);
+    }
+}
+
+export async function updateFoodFromFridge(id: string, name: string, expiryDate: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('UPDATE fridge SET name = ?, date = ? WHERE id = ?', name, expiryDate, id);
+        sendUpdateFridgeFoodEvents(id);
+    } catch (error) {
+        logError('error updating a habit', error);
+    }
+}
+
+export async function addTodo(name: string, date: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('INSERT INTO todos (id, name, date) VALUES (?, ?, ?)', newId(), name, date);
+        sendAddTodoEvents();
+    } catch (error) {
+        logError('errror adding todo', error);
+    }
+}
+
+export async function getAllTodos() {
+    try {
+        const db = await getDatabase();
+        const values = await db.getAllAsync<Todo>('SELECT id, name, date FROM todo');
+        return values;
+    } catch (error) {
+        logError('error getting all todos', error);
+        return [];
+    }
+}
+
+export async function getTodo(id: string) {
+    try {
+        const db = await getDatabase();
+        const todo = await db.getFirstAsync<FridgeFood>('SELECT id, name, date FROM todo WHERE id = ?', id);
+        if (!todo) {
+            return undefined;
+        }
+        return todo;
+    } catch (error) {
+        logError('error getting one todo', error);
+        return undefined;
+    }
+}
+
+export async function removeTodo(id: string) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('DELETE FROM todo WHERE id = ?', id);
+        sendRemoveTodoEvents();
+    } catch (error) {
+        logError('error removing food from todo', error);
     }
 }

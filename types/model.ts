@@ -16,3 +16,15 @@ export type ChartValue = {
     value: number;
     date: number;
 }
+
+export type FridgeFood = {
+    id: string;
+    name: string;
+    date: number;
+}
+
+export type Todo = {
+    id: string;
+    name: string;
+    date: number;
+}

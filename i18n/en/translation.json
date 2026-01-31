@@ -48,9 +48,39 @@
 		"updateValueButton": "Update value",
 		"deleteButton": "Delete chart"
 	},
+	"fridge": {
+		"addButton": "Add more food",
+		"title": "Fridge",
+		"eatButton": "Eat",
+		"due": "Due {{val, relativetime(numeric: auto;)}}",
+		"addFood": {
+			"title": "Add more food",
+			"addButton": "Add",
+			"inputLabels": {
+				"name": "Name",
+				"expiryDate": "Expiry Date"
+			}
+		},
+		"editFood": {
+			"title": "Edit food",
+			"saveButton": "Save"
+		}
+	},
+	"todo": {
+		"addButton": "Add todo",
+		"title": "Todos",
+		"addTodo": {
+			"title": "Add todo"
+		},
+		"editTodo": {
+			"title": "Edit todo"
+		}
+	},
 	"tabs": {
 		"habits": "Habits",
-		"charts": "Charts"
+		"charts": "Charts",
+		"fridge": "Fridge",
+		"todo": "Todo"
 	},
 	"date": "{{val, datetime}}"
 }

@@ -1,4 +1,4 @@
-import { useThemeColor } from "@/hooks/useThemeColor"
+import useCalendarTheme from "@/hooks/useCalendarTheme"
 import { useHabitCalendar } from "@/store/hooks"
 import { getMonthStart, toDateString } from "@/utils/time"
 import { ComponentProps, useCallback, useMemo, useState } from "react"
@@ -8,21 +8,6 @@ type Props = {
     id: string;
 }
 
-
-function useCalendarTheme() {
-    const calendarBackground = useThemeColor('foreground');
-    const arrowColor = useThemeColor('button')
-    const monthTextColor = useThemeColor('foregroundText');
-    const selectedDayBackgroundColor = useThemeColor('foregroundDone');
-    const selectedDayTextColor = useThemeColor('foregroundDoneText');
-    return useMemo((): ComponentProps<typeof Calendar>['theme']  => ({
-        calendarBackground,
-        arrowColor,
-        monthTextColor,
-        selectedDayBackgroundColor,
-        selectedDayTextColor,
-    }), [arrowColor, calendarBackground, monthTextColor, selectedDayBackgroundColor, selectedDayTextColor]);
-}
 function HabitCalendar({
     id,
 }: Props) {
