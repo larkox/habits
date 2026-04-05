@@ -69,18 +69,46 @@
 	"todo": {
 		"addButton": "Add todo",
 		"title": "Todos",
+		"doButton": "Do",
+		"due": "Due {{val, relativetime(numeric: auto;)}}",
 		"addTodo": {
-			"title": "Add todo"
+			"title": "Add todo",
+			"addButton": "Add",
+			"inputLabels": {
+				"name": "Name",
+				"date": "Due date"
+			}
 		},
 		"editTodo": {
-			"title": "Edit todo"
+			"title": "Edit todo",
+			"saveButton": "Save"
+		}
+	},
+	"birthdays": {
+		"addButton": "Add birthday",
+		"title": "Birthdays",
+		"due": "Due {{val, relativetime(numeric: auto;)}}",
+		"add": {
+			"title": "Add birthday",
+			"addButton": "Add",
+			"inputLabels": {
+				"name": "Name",
+				"year": "Year of birth",
+				"date": "Birth date"
+			}
+		},
+		"edit": {
+			"title": "Edit birthday",
+			"saveButton": "Save",
+			"deleteButton": "Delete birthday"
 		}
 	},
 	"tabs": {
 		"habits": "Habits",
 		"charts": "Charts",
 		"fridge": "Fridge",
-		"todo": "Todo"
+		"todo": "Todo",
+		"birthdays": "Birthdays"
 	},
 	"date": "{{val, datetime}}"
 }

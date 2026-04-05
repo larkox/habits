@@ -41,6 +41,12 @@ async function initDatabase() {
         name Text,
         date INTEGER
     )`)
+    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS birthdays (
+        id TEXT PRIMARY KEY NOT null,
+        name TEXT,
+        date TEXT,
+        year INTEGER
+    )`)
     db = newDb;
 }
 

@@ -1,9 +1,9 @@
-import { Chart, ChartValue, FridgeFood, Habit, Todo } from "@/types/model";
+import { Birthday, Chart, ChartValue, FridgeFood, Habit, Todo } from "@/types/model";
 import { newId } from "@/utils/crypto";
 import { logError } from "@/utils/log";
 import { getMonthEnd, getStartOfDay, getYesterday } from "@/utils/time";
 import { getDatabase } from "./db";
-import { sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendAddFridgeFoodEvents, sendAddTodoEvents, sendRemoveChartEvents, sendRemoveEvents, sendRemoveFridgeFoodEvents, sendRemoveTodoEvents, sendUpdateEvents, sendUpdateFridgeFoodEvents } from "./events";
+import { sendAddBirthdayEvents, sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendAddFridgeFoodEvents, sendAddTodoEvents, sendRemoveBirthdayEvents, sendRemoveChartEvents, sendRemoveEvents, sendRemoveFridgeFoodEvents, sendRemoveTodoEvents, sendUpdateBirthdayEvents, sendUpdateEvents, sendUpdateFridgeFoodEvents, sendUpdateTodoEvents } from "./events";
 
 export async function getAllHabits() {
     try {
@@ -11,7 +11,7 @@ export async function getAllHabits() {
         const habits = await db.getAllAsync<Habit>('SELECT id, title, periodicity, lastDone FROM habits')
         return habits;
     } catch (error) {
-        logError('error getting a habit', error);
+        logError('error getting all habits', error);
     }
 }
 
@@ -209,7 +209,7 @@ export async function updateFoodFromFridge(id: string, name: string, expiryDate:
         await db.runAsync('UPDATE fridge SET name = ?, date = ? WHERE id = ?', name, expiryDate, id);
         sendUpdateFridgeFoodEvents(id);
     } catch (error) {
-        logError('error updating a habit', error);
+        logError('error updating a food from fridge', error);
     }
 }
 
@@ -219,14 +219,14 @@ export async function addTodo(name: string, date: number) {
         await db.runAsync('INSERT INTO todos (id, name, date) VALUES (?, ?, ?)', newId(), name, date);
         sendAddTodoEvents();
     } catch (error) {
-        logError('errror adding todo', error);
+        logError('error adding todo', error);
     }
 }
 
 export async function getAllTodos() {
     try {
         const db = await getDatabase();
-        const values = await db.getAllAsync<Todo>('SELECT id, name, date FROM todo');
+        const values = await db.getAllAsync<Todo>('SELECT id, name, date FROM todos');
         return values;
     } catch (error) {
         logError('error getting all todos', error);
@@ -237,7 +237,7 @@ export async function getAllTodos() {
 export async function getTodo(id: string) {
     try {
         const db = await getDatabase();
-        const todo = await db.getFirstAsync<FridgeFood>('SELECT id, name, date FROM todo WHERE id = ?', id);
+        const todo = await db.getFirstAsync<Todo>('SELECT id, name, date FROM todos WHERE id = ?', id);
         if (!todo) {
             return undefined;
         }
@@ -248,12 +248,78 @@ export async function getTodo(id: string) {
     }
 }
 
+export async function updateTodo(id: string, name: string, date: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('UPDATE todos SET name = ?, date = ? WHERE id = ?', name, date, id);
+        sendUpdateTodoEvents(id);
+    } catch (error) {
+        logError('error updating a todo', error);
+    }
+}
+
 export async function removeTodo(id: string) {
     try {
         const db = await getDatabase();
-        await db.runAsync('DELETE FROM todo WHERE id = ?', id);
+        await db.runAsync('DELETE FROM todos WHERE id = ?', id);
         sendRemoveTodoEvents();
     } catch (error) {
-        logError('error removing food from todo', error);
+        logError('error removing todo', error);
+    }
+}
+
+
+export async function addBirthday(name: string, date: string, year: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('INSERT INTO birthdays (id, name, date, year) VALUES (?, ?, ?, ?)', newId(), name, date, year);
+        sendAddBirthdayEvents();
+    } catch (error) {
+        logError('error adding birthday', error);
+    }
+}
+
+export async function getAllBirthdays() {
+    try {
+        const db = await getDatabase();
+        const values = await db.getAllAsync<Birthday>('SELECT id, name, date, year FROM birthdays');
+        return values;
+    } catch (error) {
+        logError('error getting all birthdays', error);
+        return [];
+    }
+}
+
+export async function getBirthday(id: string) {
+    try {
+        const db = await getDatabase();
+        const todo = await db.getFirstAsync<Birthday>('SELECT id, name, date, year FROM birthdays WHERE id = ?', id);
+        if (!todo) {
+            return undefined;
+        }
+        return todo;
+    } catch (error) {
+        logError('error getting one birthday', error);
+        return undefined;
+    }
+}
+
+export async function updateBirthday(id: string, name: string, date: string, year: number) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('UPDATE birthdays SET name = ?, date = ?, year = ? WHERE id = ?', name, date, year, id);
+        sendUpdateBirthdayEvents(id);
+    } catch (error) {
+        logError('error updating a birthday', error);
+    }
+}
+
+export async function removeBirthday(id: string) {
+    try {
+        const db = await getDatabase();
+        await db.runAsync('DELETE FROM birthdays WHERE id = ?', id);
+        sendRemoveBirthdayEvents();
+    } catch (error) {
+        logError('error removing a birthday', error);
     }
 }

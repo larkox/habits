@@ -28,3 +28,10 @@ export type Todo = {
     name: string;
     date: number;
 }
+
+export type Birthday = {
+    id: string;
+    name: string;
+    year: number;
+    date: string; // mm-dd
+}

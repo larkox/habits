@@ -21,6 +21,7 @@ const MAPPING: Partial<IconMapping> = {
     'chart.line.downtrend.xyaxis': 'bar-chart',
     'archivebox.fill': 'archive',
     'checkmark.app.fill': 'check-circle-outline',
+    'birthday.cake.fill': 'cake'
 };
 
 /**

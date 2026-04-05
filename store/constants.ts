@@ -10,3 +10,6 @@ export const EVENT_STORAGE_UPDATE_FRIDGE_FOOD = 'event_storage_update_fridge_foo
 export const EVENT_STORAGE_ADD_TODO = 'event_storage_add_todo';
 export const EVENT_STORAGE_REMOVE_TODO = 'event_storage_remove_todo';
 export const EVENT_STORAGE_UPDATE_TODO = 'event_storage_update_todo';
+export const EVENT_STORAGE_ADD_BIRTHDAY = 'event_storage_add_birthday';
+export const EVENT_STORAGE_REMOVE_BIRTHDAY = 'event_storage_remove_birthday';
+export const EVENT_STORAGE_UPDATE_BIRTHDAY = 'event_storage_update_birthday';

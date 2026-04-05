@@ -1,14 +1,14 @@
 import View from '@/components/base/View';
-import TodoList from '@/components/TodoList';
+import BirthdayList from '@/components/BirthdayList';
 import { StyleSheet } from 'react-native';
 
-export default function Todo() {
+export default function Birthdays() {
     return (
         <View
             color={'background'}
             style={styles.container}
         >
-            <TodoList/>
+            <BirthdayList/>
         </View>
     );
 }

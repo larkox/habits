@@ -49,6 +49,14 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
+                name="birthdays"
+                options={{
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name='birthday.cake.fill' color={color} />,
+                    headerShown: false,
+                    title: t('tabs.birthdays')
+                }}
+            />
+            <Tabs.Screen
                 name="charts"
                 options={{
                     tabBarIcon: ({color}) => <IconSymbol size={28} name="chart.line.downtrend.xyaxis" color={color} />,

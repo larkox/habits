@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DeviceEventEmitter, EmitterSubscription } from "react-native";
-import { EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_FRIDGE_FOOD, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_ADD_TODO, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_REMOVE_FRIDGE_FOOD, EVENT_STORAGE_REMOVE_TODO, EVENT_STORAGE_UPDATE_FRIDGE_FOOD, EVENT_STORAGE_UPDATE_HABIT, EVENT_STORAGE_UPDATE_TODO } from "./constants";
-import { getAllChartIDs, getAllFridgeFood, getAllHabits, getAllTodos, getChart, getChartValues, getFridgeFood, getHabit, getHabitCalendar, getTodo } from "./storage";
+import { EVENT_STORAGE_ADD_BIRTHDAY, EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_FRIDGE_FOOD, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_ADD_TODO, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_REMOVE_BIRTHDAY, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_REMOVE_FRIDGE_FOOD, EVENT_STORAGE_REMOVE_TODO, EVENT_STORAGE_UPDATE_BIRTHDAY, EVENT_STORAGE_UPDATE_FRIDGE_FOOD, EVENT_STORAGE_UPDATE_HABIT, EVENT_STORAGE_UPDATE_TODO } from "./constants";
+import { getAllBirthdays, getAllChartIDs, getAllFridgeFood, getAllHabits, getAllTodos, getBirthday, getChart, getChartValues, getFridgeFood, getHabit, getHabitCalendar, getTodo } from "./storage";
 
 function useGenericHook<T>(events: string[], getValue: () => Promise<T|undefined>) {
     const [value, setValue] = useState<T|undefined>(undefined);
@@ -141,4 +141,21 @@ const USE_TODO_EVENTS = [
 
 export function useTodo(id: string) {
     return useGenericHookWithId(id, USE_TODO_EVENTS, getTodo)
+}
+
+const USE_BIRTHDAYS_EVENTS = [
+    EVENT_STORAGE_ADD_BIRTHDAY,
+    EVENT_STORAGE_REMOVE_BIRTHDAY,
+];
+
+export function useBirthdays() {
+    return useGenericHook(USE_BIRTHDAYS_EVENTS, getAllBirthdays);
+}
+
+const USE_BIRTHDAY_EVENTS = [
+    EVENT_STORAGE_UPDATE_BIRTHDAY,
+];
+
+export function useBirthday(id: string) {
+    return useGenericHookWithId(id, USE_BIRTHDAY_EVENTS, getBirthday)
 }

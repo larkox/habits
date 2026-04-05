@@ -26,7 +26,7 @@ function SaveButton({
     const [t] = useTranslation();
 
     const onPress = useCallback(() => {
-        const numberValue = parseInt(periodicity);
+        const numberValue = parseInt(periodicity, 10);
         if (isNaN(numberValue)) {
             return;
         }

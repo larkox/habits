@@ -46,3 +46,25 @@ export function toDateString(timestamp: number) {
     const day = date.getDate().toString(10).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
+
+export function getMonthAndDay(timestamp: number) {
+    const date = new Date(timestamp);
+    const month = (date.getMonth()+1).toString(10).padStart(2, '0');
+    const day = date.getDate().toString(10).padStart(2, '0');
+    return `${month}-${day}`;
+}
+
+export function getNextMonthAndDay(monthAndDay: string) {
+    const splitted = monthAndDay.split('-');
+    const month = parseInt(splitted[0], 10)-1;
+    const day = parseInt(splitted[1], 10);
+    const today = getStartOfDay();
+    const date = new Date(getStartOfDay());
+    const thisYear = date.getFullYear();
+    date.setFullYear(thisYear, month, day);
+    if (date.valueOf() < today) {
+        date.setFullYear(date.getFullYear()+1);
+    }
+
+    return date.valueOf();
+}
