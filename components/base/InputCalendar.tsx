@@ -1,8 +1,7 @@
-import useCalendarTheme from "@/hooks/useCalendarTheme";
-import { toDateString } from "@/utils/time";
+import type { CalendarDate } from "@/types/calendar";
+import { getLocalDateTimestamp, toDateString } from "@/utils/time";
 import { useCallback, useMemo } from "react";
-import { Calendar, DateData } from "react-native-calendars";
-import { MarkedDates } from "react-native-calendars/src/types";
+import Calendar from "./Calendar";
 import Text from "./Text";
 import View from "./View";
 
@@ -17,22 +16,17 @@ function InputCalendar({
     value,
     setValue,
 }: Props) {
-    const calendarTheme = useCalendarTheme()
     let dateString = '';
     if (value) {
         dateString = toDateString(value);
     }
     
-    const markedDates = useMemo<MarkedDates|undefined>(() => {
-        if (!dateString) {
-            return undefined;
-        }
-
-        return {[dateString]: {selected: true}}
+    const selectedDates = useMemo(() => {
+        return dateString ? [dateString] : [];
     }, [dateString]);
 
-    const onDayPress = useCallback((date: DateData) => {
-        setValue(date.timestamp)
+    const onDayPress = useCallback((date: CalendarDate) => {
+        setValue(getLocalDateTimestamp(date))
     }, [setValue]);
 
     return (
@@ -40,8 +34,7 @@ function InputCalendar({
             <Text context='foreground'>{label}</Text>
             <Calendar
                 onDayPress={onDayPress}
-                markedDates={markedDates}
-                theme={calendarTheme}
+                selectedDates={selectedDates}
                 initialDate={dateString}
             />
         </View>

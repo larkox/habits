@@ -1,8 +1,8 @@
-import useCalendarTheme from "@/hooks/useCalendarTheme"
+import Calendar from "@/components/base/Calendar"
+import type { CalendarDate } from "@/types/calendar"
 import { useHabitCalendar } from "@/store/hooks"
 import { getMonthStart, toDateString } from "@/utils/time"
-import { ComponentProps, useCallback, useMemo, useState } from "react"
-import { Calendar, DateData } from "react-native-calendars"
+import { useCallback, useMemo, useState } from "react"
 
 type Props = {
     id: string;
@@ -11,26 +11,21 @@ type Props = {
 function HabitCalendar({
     id,
 }: Props) {
-    const calendarTheme = useCalendarTheme();
     const [monthStart, setMonthStart] = useState(() => getMonthStart())
     const events = useHabitCalendar(id, monthStart);
-    const onMonthChange = useCallback((date: DateData) => {
-        setMonthStart(getMonthStart(date.timestamp));
+    const onMonthChange = useCallback((date: CalendarDate) => {
+        setMonthStart(getMonthStart(date));
     }, [])
 
-    const markedDates = useMemo(() => {
-        return events?.reduce<ComponentProps<typeof Calendar>['markedDates']>((acc, v) => {
-            acc![toDateString(v.date)] = {selected: true};
-            return acc;
-        }, {})
+    const selectedDates = useMemo(() => {
+        return events?.map((event) => toDateString(event.date));
     }, [events])
 
     return (
         <Calendar
-            disableAllTouchEvents={true}
-            markedDates={markedDates}
+            readOnly
+            selectedDates={selectedDates}
             onMonthChange={onMonthChange}
-            theme={calendarTheme}
         />
     )
 }

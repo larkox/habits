@@ -1,7 +1,17 @@
+import type { CalendarDate } from "@/types/calendar";
+
 export function getStartOfDay() {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     return now.getTime();
+}
+
+// Calendar timestamps are UTC midnight; preserve the selected local calendar day.
+export function getLocalDateTimestamp({year, month, day}: CalendarDate) {
+    const date = new Date(0);
+    date.setFullYear(year, month - 1, day);
+    date.setHours(0, 0, 0, 0);
+    return date.getTime();
 }
 
 export function getYesterday() {
@@ -22,11 +32,13 @@ export function isDone(lastDone: number) {
     return lastDone === getStartOfDay();
 }
 
-export function getMonthStart(timestamp?: number) {
-    const now = timestamp ? new Date(timestamp) : new Date();
-    now.setDate(1)
-    now.setHours(0, 0, 0, 0);
-    return now.getTime();
+export function getMonthStart(date?: CalendarDate) {
+    const now = new Date();
+    return getLocalDateTimestamp({
+        year: date?.year ?? now.getFullYear(),
+        month: date?.month ?? now.getMonth() + 1,
+        day: 1,
+    });
 }
 
 // If we are at the month start, we are sure that 32 days later it is the next month
