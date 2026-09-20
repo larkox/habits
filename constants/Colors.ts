@@ -3,25 +3,15 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
 export const Colors = {
     light: {
-        // background: '#fff',
-        // foreground: '#eee',
-        // foregroundText: '#11181C',
-        // foregroundOverdue: '#fdd',
-        // foregroundOverdueText: '',
-        // foregroundDone: '#dfd',
-        // foregroundDoneText: '',
-        // button: '#f3f3f3',
-        // buttonText: '#123',
-        // disabledButton: '#ccc',
-        // disabledButtonText: '#123',
-        // selectedTabTint: tintColorLight,
-        // tabIconDefault: '#687076',
-        // tabIconSelected: tintColorLight,
+        /* Navigation reminder badges */
+        badgeNeutral: '#E2E8F0',
+        badgeNeutralText: '#334155',
+        badgeWarning: '#FBBF24',
+        badgeWarningText: '#422006',
+        badgeImminent: '#B91C1C',
+        badgeImminentText: '#FFFFFF',
 
         /* Background */
         background: '#f7f8fa',  /* Light grayish background, easy on the eyes */
@@ -72,17 +62,13 @@ export const Colors = {
         buttonBorder: '#388e3c',  /* Darker green for button borders, matching the button’s active shade */
     },
     dark: {
-        // text: '#ECEDEE',
-        // background: '#151718',
-        // foreground: '#88f',
-        // foregroundDone: '#dfd',
-        // overdue: '#fdd',
-        // button: '#ccc',
-        // disabledButton: '#f3f3f3',
-        // tint: tintColorDark,
-        // icon: '#9BA1A6',
-        // tabIconDefault: '#9BA1A6',
-        // tabIconSelected: tintColorDark,
+        /* Navigation reminder badges */
+        badgeNeutral: '#334155',
+        badgeNeutralText: '#E2E8F0',
+        badgeWarning: '#F59E0B',
+        badgeWarningText: '#422006',
+        badgeImminent: '#EF4444',
+        badgeImminentText: '#450A0A',
 
         /* Background */
         background: '#f7f8fa',  /* Light grayish background, easy on the eyes */

@@ -12,6 +12,7 @@ module.exports = defineConfig([
         ignores: ['dist/*'],
         rules: {
             '@stylistic/eol-last': ['error', 'always'],
+            'curly': ['error', 'all'],
             "no-console": ['error'],
             '@stylistic/indent': ['error'],
             '@stylistic/jsx-indent-props': ['error'],

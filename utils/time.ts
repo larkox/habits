@@ -99,12 +99,11 @@ export function getMonthAndDayTimestamp(monthAndDay: string) {
     return getLocalDateTimestamp({year, month, day});
 }
 
-export function getNextMonthAndDay(monthAndDay: string) {
+export function getNextMonthAndDay(monthAndDay: string, today = getStartOfDay()) {
     if (!isValidMonthAndDay(monthAndDay)) {
         return getStartOfDay();
     }
     const {month, day} = parseMonthAndDay(monthAndDay);
-    const today = getStartOfDay();
     let year = new Date(today).getFullYear();
     let occurrence = getBirthdayOccurrence(year, month, day);
 
