@@ -1,7 +1,15 @@
 {
 	"errors": {
 		"storageTitle": "Could not save changes",
-		"storageMessage": "Please try again."
+		"storageMessage": "Please try again.",
+		"validationTitle": "Invalid information",
+		"validationMessage": "Review the entered values and try again."
+	},
+	"validation": {
+		"required": "This field is required.",
+		"positiveInteger": "Enter a whole number greater than zero.",
+		"number": "Enter a valid number using a decimal point or comma.",
+		"birthYear": "Enter a valid year that is not in the future."
 	},
 	"habits": {
 		"title": "Habits",

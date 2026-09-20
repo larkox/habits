@@ -11,53 +11,61 @@ import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { addTodo } from '@/store/storage';
 import { getStartOfDay } from '@/utils/time';
+import { normalizeRequiredText } from '@/utils/validation';
+
+type FormErrors = {
+    name?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    date: number;
-    title: string;
+    loading: boolean;
+    onPress: () => void;
 }
 
 function SaveButton({
-    mutation,
-    date,
-    title,
+    loading,
+    onPress,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
-
-    const onPress = useCallback(async () => {
-        const saved = await mutation.run(() => addTodo(title, date));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, title, date, router]);
 
     return (
         <Button
             text={t('todo.addTodo.addButton')}
             onPress={onPress}
-            loading={mutation.isPending}
+            loading={loading}
         />
     )
 }
 
 export default function AddScreen() {
     const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
     const navigation = useNavigation();
     const [name, setName] = useState('')
     const [date, setDate] = useState<number>(() => getStartOfDay());
     const [t] = useTranslation();
+    const router = useRouter();
+
+    const save = useCallback(async () => {
+        const normalizedName = normalizeRequiredText(name);
+        setErrors({name: normalizedName ? undefined : t('validation.required')});
+        if (!normalizedName) {
+            return;
+        }
+        const saved = await mutation.run(() => addTodo(normalizedName, date));
+        if (saved) {
+            router.back();
+        }
+    }, [date, mutation, name, router, t]);
 
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
-                mutation={mutation}
-                date={date}
-                title={name}
+                loading={mutation.isPending}
+                onPress={save}
             />
         )})
-    }, [mutation, navigation, date, name])
+    }, [mutation.isPending, navigation, save])
 
     return (
         <View
@@ -68,6 +76,7 @@ export default function AddScreen() {
                 onChange={setName}
                 value={name}
                 type='text'
+                error={errors.name}
             />
             <InputCalendar
                 label={t('todo.addTodo.inputLabels.date')}

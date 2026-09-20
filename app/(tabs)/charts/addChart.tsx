@@ -9,45 +9,56 @@ import Input from '@/components/base/Input';
 import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { addChart } from '@/store/storage';
+import { normalizeRequiredText } from '@/utils/validation';
+
+type FormErrors = {
+    title?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    title: string;
+    loading: boolean;
+    onPress: () => void;
 }
 function AddButton({
-    mutation,
-    title,
+    loading,
+    onPress,
 }: SaveButtonProps) {
     const [t] = useTranslation();
-    const router = useRouter();
-
-    const onPress = useCallback(async () => {
-        const saved = await mutation.run(() => addChart(title));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, title, router]);
             
     return <Button
         text={t('charts.addChart.addButton')}
         onPress={onPress}
-        loading={mutation.isPending}
+        loading={loading}
     />
 }
 export default function AddChartScreen() {
     const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
     const [title, setTitle] = useState('')
     const [t] = useTranslation();
     const navigation = useNavigation();
+    const router = useRouter();
+
+    const save = useCallback(async () => {
+        const normalizedTitle = normalizeRequiredText(title);
+        setErrors({title: normalizedTitle ? undefined : t('validation.required')});
+        if (!normalizedTitle) {
+            return;
+        }
+        const saved = await mutation.run(() => addChart(normalizedTitle));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, router, t, title]);
 
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => <AddButton
-                mutation={mutation}
-                title={title}
+                loading={mutation.isPending}
+                onPress={save}
             />,
         })
-    }, [mutation, navigation, title])
+    }, [mutation.isPending, navigation, save])
 
     return (
         <View
@@ -59,6 +70,7 @@ export default function AddChartScreen() {
                 onChange={setTitle}
                 type='text'
                 value={title}
+                error={errors.title}
             />
         </View>
     );

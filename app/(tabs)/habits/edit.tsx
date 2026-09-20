@@ -11,39 +11,29 @@ import HabitCalendar from '@/components/HabitCalendar';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useHabit } from '@/store/hooks';
 import { removeHabit, updateHabit } from '@/store/storage';
+import { normalizeRequiredText, parsePositiveInteger } from '@/utils/validation';
+
+type FormErrors = {
+    title?: string;
+    periodicity?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    periodicity: string;
-    title: string;
-    id: string;
+    loading: boolean;
+    onPress: () => void;
 }
 
 function SaveButton({
-    mutation,
-    periodicity,
-    title,
-    id,
+    loading,
+    onPress,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
-
-    const onPress = useCallback(async () => {
-        const numberValue = parseInt(periodicity, 10);
-        if (isNaN(numberValue)) {
-            return;
-        }
-        const saved = await mutation.run(() => updateHabit(id, title, numberValue));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, periodicity, id, title, router]);
 
     return (
         <Button
             text={t('habits.editHabit.saveButton')}
             onPress={onPress}
-            loading={mutation.isPending}
+            loading={loading}
         />
     )
 }
@@ -55,18 +45,34 @@ export default function EditScreen() {
     const navigation = useNavigation();
     const [title, setTitle] = useState(habit?.title || '')
     const [periodicity, setPeriodicity] = useState(habit?.periodicity.toString() || '');
+    const [errors, setErrors] = useState<FormErrors>({});
     const [t] = useTranslation();
+
+    const save = useCallback(async () => {
+        const normalizedTitle = normalizeRequiredText(title);
+        const numberValue = parsePositiveInteger(periodicity);
+        const nextErrors: FormErrors = {
+            title: normalizedTitle ? undefined : t('validation.required'),
+            periodicity: numberValue === undefined ? t('validation.positiveInteger') : undefined,
+        };
+        setErrors(nextErrors);
+        if (!normalizedTitle || numberValue === undefined) {
+            return;
+        }
+        const saved = await mutation.run(() => updateHabit(id, normalizedTitle, numberValue));
+        if (saved) {
+            router.back();
+        }
+    }, [id, mutation, periodicity, router, t, title]);
 
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
-                mutation={mutation}
-                periodicity={periodicity}
-                title={title}
-                id={id}
+                loading={mutation.isPending}
+                onPress={save}
             />
         )})
-    }, [mutation, id, navigation, periodicity, title])
+    }, [mutation.isPending, navigation, save])
 
     useEffect(() => {
         setTitle(habit?.title || '');
@@ -88,12 +94,14 @@ export default function EditScreen() {
                 onChange={setTitle}
                 value={title}
                 type='text'
+                error={errors.title}
             />
             <Input
                 label={t('habits.editHabit.inputLabels.periodicity')}
                 onChange={setPeriodicity}
                 value={periodicity}
                 type={'numeric'}
+                error={errors.periodicity}
             />
             <HabitCalendar id={id}/>
             <View style={styles.deletecontainer}>

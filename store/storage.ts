@@ -3,10 +3,15 @@ import type { Result } from "@/types/result";
 import { newId } from "@/utils/crypto";
 import { logError } from "@/utils/log";
 import { getMonthEnd, getStartOfDay, getYesterday } from "@/utils/time";
+import { isValidMonthAndDay } from '@/utils/validation';
 
 import { getDatabase } from "./db";
 import { sendAddBirthdayEvents, sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendAddFridgeFoodEvents, sendAddTodoEvents, sendRemoveBirthdayEvents, sendRemoveChartEvents, sendRemoveEvents, sendRemoveFridgeFoodEvents, sendRemoveTodoEvents, sendUpdateBirthdayEvents, sendUpdateEvents, sendUpdateFridgeFoodEvents, sendUpdateTodoEvents } from "./events";
 import { withWriteTransaction } from './transactions';
+
+function validationError(): Result {
+    return { ok: false, error: { code: 'validation_error' } };
+}
 
 export async function getAllHabits() {
     try {
@@ -140,6 +145,10 @@ export async function removeChart(id: string): Promise<Result> {
 }
 
 export async function setChartValue(chartId: string, value: number): Promise<Result> {
+    if (!Number.isFinite(value)) {
+        return validationError();
+    }
+
     try {
         const db = await getDatabase();
         await db.runAsync(
@@ -309,6 +318,10 @@ export async function removeTodo(id: string): Promise<Result> {
 
 
 export async function addBirthday(name: string, date: string, year: number): Promise<Result> {
+    if (!isValidMonthAndDay(date)) {
+        return validationError();
+    }
+
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO birthdays (id, name, date, year) VALUES (?, ?, ?, ?)', newId(), name, date, year);
@@ -346,6 +359,10 @@ export async function getBirthday(id: string) {
 }
 
 export async function updateBirthday(id: string, name: string, date: string, year: number): Promise<Result> {
+    if (!isValidMonthAndDay(date)) {
+        return validationError();
+    }
+
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE birthdays SET name = ?, date = ?, year = ? WHERE id = ?', name, date, year, id);

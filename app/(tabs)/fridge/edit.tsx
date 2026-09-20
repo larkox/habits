@@ -11,57 +11,62 @@ import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useFood } from '@/store/hooks';
 import { updateFoodFromFridge } from '@/store/storage';
+import { normalizeRequiredText } from '@/utils/validation';
+
+type FormErrors = {
+    name?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    expiryDate: number;
-    name: string;
-    id: string;
+    loading: boolean;
+    onPress: () => void;
 }
 
 function SaveButton({
-    mutation,
-    expiryDate,
-    name,
-    id,
+    loading,
+    onPress,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
-
-    const onPress = useCallback(async () => {
-        const saved = await mutation.run(() => updateFoodFromFridge(id, name, expiryDate));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, expiryDate, id, name, router]);
 
     return (
         <Button
             text={t('fridge.editFood.saveButton')}
             onPress={onPress}
-            loading={mutation.isPending}
+            loading={loading}
         />
     )
 }
 export default function EditScreen() {
     const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
     const {id} = useLocalSearchParams<{id: string}>();
     const food = useFood(id);
     const navigation = useNavigation();
     const [name, setName] = useState(food?.name || '')
     const [expiryDate, setExpiryDate] = useState(food?.date || 0);
     const [t] = useTranslation();
+    const router = useRouter();
+
+    const save = useCallback(async () => {
+        const normalizedName = normalizeRequiredText(name);
+        setErrors({name: normalizedName ? undefined : t('validation.required')});
+        if (!normalizedName) {
+            return;
+        }
+        const saved = await mutation.run(() => updateFoodFromFridge(id, normalizedName, expiryDate));
+        if (saved) {
+            router.back();
+        }
+    }, [expiryDate, id, mutation, name, router, t]);
 
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
-                mutation={mutation}
-                expiryDate={expiryDate}
-                name={name}
-                id={id}
+                loading={mutation.isPending}
+                onPress={save}
             />
         )})
-    }, [mutation, id, navigation, expiryDate, name])
+    }, [mutation.isPending, navigation, save])
 
     useEffect(() => {
         setName(food?.name || '');
@@ -77,6 +82,7 @@ export default function EditScreen() {
                 onChange={setName}
                 value={name}
                 type='text'
+                error={errors.name}
             />
             <InputCalendar
                 label={t('fridge.addFood.inputLabels.expiryDate')}

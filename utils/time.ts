@@ -1,4 +1,5 @@
 import type { CalendarDate } from "@/types/calendar";
+import { isValidMonthAndDay } from '@/utils/validation';
 
 export function getStartOfDay() {
     const now = new Date();
@@ -66,17 +67,51 @@ export function getMonthAndDay(timestamp: number) {
     return `${month}-${day}`;
 }
 
-export function getNextMonthAndDay(monthAndDay: string) {
-    const splitted = monthAndDay.split('-');
-    const month = parseInt(splitted[0], 10)-1;
-    const day = parseInt(splitted[1], 10);
-    const today = getStartOfDay();
-    const date = new Date(getStartOfDay());
-    const thisYear = date.getFullYear();
-    date.setFullYear(thisYear, month, day);
-    if (date.valueOf() < today) {
-        date.setFullYear(date.getFullYear()+1);
+function parseMonthAndDay(monthAndDay: string) {
+    const [monthString, dayString] = monthAndDay.split('-');
+    return {
+        month: Number(monthString),
+        day: Number(dayString),
+    };
+}
+
+function getBirthdayOccurrence(year: number, month: number, day: number) {
+    // In non-leap years, February 29 birthdays are observed on February 28.
+    const occurrenceDay = month === 2 && day === 29
+        && new Date(year, 1, 29).getMonth() !== 1
+        ? 28
+        : day;
+
+    return getLocalDateTimestamp({year, month, day: occurrenceDay});
+}
+
+export function getMonthAndDayTimestamp(monthAndDay: string) {
+    if (!isValidMonthAndDay(monthAndDay)) {
+        return getStartOfDay();
+    }
+    const {month, day} = parseMonthAndDay(monthAndDay);
+    let year = new Date().getFullYear();
+
+    while (month === 2 && day === 29 && new Date(year, 1, 29).getMonth() !== 1) {
+        year += 1;
     }
 
-    return date.valueOf();
+    return getLocalDateTimestamp({year, month, day});
+}
+
+export function getNextMonthAndDay(monthAndDay: string) {
+    if (!isValidMonthAndDay(monthAndDay)) {
+        return getStartOfDay();
+    }
+    const {month, day} = parseMonthAndDay(monthAndDay);
+    const today = getStartOfDay();
+    let year = new Date(today).getFullYear();
+    let occurrence = getBirthdayOccurrence(year, month, day);
+
+    if (occurrence < today) {
+        year += 1;
+        occurrence = getBirthdayOccurrence(year, month, day);
+    }
+
+    return occurrence;
 }

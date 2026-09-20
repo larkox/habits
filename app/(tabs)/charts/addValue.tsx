@@ -11,51 +11,56 @@ import useStorageMutation from "@/hooks/useStorageMutation";
 import { useChartValues } from '@/store/hooks';
 import { setChartValue } from '@/store/storage';
 import { getChartValueForToday } from '@/utils/charts';
+import { parseLocalizedNumber } from '@/utils/validation';
+
+type FormErrors = {
+    value?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    value: string;
+    loading: boolean;
+    onPress: () => void;
     isUpdate: boolean;
-    chartId: string;
 }
 
 function SaveButton({
-    mutation,
-    value,
+    loading,
+    onPress,
     isUpdate,
-    chartId,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(async () => {
-        const numberValue = parseFloat(value);
-        if (isNaN(numberValue)) {
+    const text = isUpdate ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
+    return <Button
+        text={text}
+        onPress={onPress}
+        loading={loading}
+    />
+}
+
+export default function AddChartValue() {
+    const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
+    const {id: chartId} = useLocalSearchParams<{id: string}>();
+    const navigation = useNavigation();
+    const values = useChartValues(chartId);
+    const todayValue = getChartValueForToday(values);
+    const [t] = useTranslation();
+    const router = useRouter();
+
+    const [value, setValue] = useState('');
+
+    const save = useCallback(async () => {
+        const numberValue = parseLocalizedNumber(value);
+        setErrors({value: numberValue === undefined ? t('validation.number') : undefined});
+        if (numberValue === undefined) {
             return;
         }
         const saved = await mutation.run(() => setChartValue(chartId, numberValue));
         if (saved) {
             router.back();
         }
-    }, [mutation, value, chartId, router]);
-
-    const text = isUpdate ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
-    return <Button
-        text={text}
-        onPress={onPress}
-        loading={mutation.isPending}
-    />
-}
-
-export default function AddChartValue() {
-    const mutation = useStorageMutation();
-    const {id: chartId} = useLocalSearchParams<{id: string}>();
-    const navigation = useNavigation();
-    const values = useChartValues(chartId);
-    const todayValue = getChartValueForToday(values);
-    const [t] = useTranslation();
-
-    const [value, setValue] = useState('');
+    }, [chartId, mutation, router, t, value]);
 
 
     // useChartValues return undefined at the beginning so we need
@@ -69,13 +74,12 @@ export default function AddChartValue() {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => <SaveButton
-                mutation={mutation}
-                value={value}
-                chartId={chartId}
+                loading={mutation.isPending}
+                onPress={save}
                 isUpdate={Boolean(todayValue)}
             />,
         })
-    }, [mutation, chartId, navigation, value, todayValue])
+    }, [mutation.isPending, navigation, save, todayValue])
 
     return (
         <View
@@ -87,6 +91,7 @@ export default function AddChartValue() {
                 onChange={setValue}
                 type='decimal'
                 value={value}
+                error={errors.value}
             />
         </View>
     );

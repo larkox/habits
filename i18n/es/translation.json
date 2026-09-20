@@ -1,7 +1,15 @@
 {
 	"errors": {
 		"storageTitle": "No se pudieron guardar los cambios",
-		"storageMessage": "Vuelve a intentarlo."
+		"storageMessage": "Vuelve a intentarlo.",
+		"validationTitle": "Información inválida",
+		"validationMessage": "Revisa los valores introducidos y vuelve a intentarlo."
+	},
+	"validation": {
+		"required": "Este campo es obligatorio.",
+		"positiveInteger": "Introduce un número entero mayor que cero.",
+		"number": "Introduce un número válido usando punto o coma decimal.",
+		"birthYear": "Introduce un año válido que no esté en el futuro."
 	},
 	"habit": "Hábito"
 }

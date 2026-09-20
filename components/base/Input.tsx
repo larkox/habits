@@ -11,6 +11,7 @@ type Props = {
     value: string;
     onChange: (newValue: string) => void;
     type: InputModeOptions;
+    error?: string;
 }
 export default function Input({
     label,
@@ -18,6 +19,7 @@ export default function Input({
     value,
     onChange,
     type,
+    error,
 }: Props) {
     const placeholderTextColor = useThemeColor('foregroundText');
     const borderColor = useThemeColor('border');
@@ -32,6 +34,7 @@ export default function Input({
                 style={{borderWidth: 1, borderColor}}
                 placeholderTextColor={placeholderTextColor}
             />
+            {error && <Text context='foregroundOverdue'>{error}</Text>}
         </View>
     )
 }

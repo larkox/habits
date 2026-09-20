@@ -113,6 +113,7 @@ export function useHabitCalendar(id: string, monthStart: number) {
 const USE_FRIDGE_FOOD_EVENTS = [
     EVENT_STORAGE_ADD_FRIDGE_FOOD,
     EVENT_STORAGE_REMOVE_FRIDGE_FOOD,
+    EVENT_STORAGE_UPDATE_FRIDGE_FOOD,
 ];
 
 export function useFridgeFood() {
@@ -130,6 +131,7 @@ export function useFood(id: string) {
 const USE_TODOS_EVENTS = [
     EVENT_STORAGE_ADD_TODO,
     EVENT_STORAGE_REMOVE_TODO,
+    EVENT_STORAGE_UPDATE_TODO,
 ];
 
 export function useTodos() {
@@ -147,6 +149,7 @@ export function useTodo(id: string) {
 const USE_BIRTHDAYS_EVENTS = [
     EVENT_STORAGE_ADD_BIRTHDAY,
     EVENT_STORAGE_REMOVE_BIRTHDAY,
+    EVENT_STORAGE_UPDATE_BIRTHDAY,
 ];
 
 export function useBirthdays() {

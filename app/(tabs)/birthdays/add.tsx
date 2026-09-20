@@ -11,61 +11,68 @@ import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { addBirthday } from '@/store/storage';
 import { getMonthAndDay, getStartOfDay } from '@/utils/time';
+import { normalizeRequiredText, parseBirthYear } from '@/utils/validation';
+
+type FormErrors = {
+    name?: string;
+    year?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    date: number;
-    title: string;
-    yearString: string;
+    loading: boolean;
+    onPress: () => void;
 }
 
 function SaveButton({
-    mutation,
-    date,
-    title,
-    yearString,
+    loading,
+    onPress,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
-
-    const onPress = useCallback(async () => {
-        const year = parseInt(yearString, 10);
-        if (isNaN(year)) {
-            return;
-        }
-        const saved = await mutation.run(() => addBirthday(title, getMonthAndDay(date), year));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, title, date, yearString, router]);
 
     return (
         <Button
             text={t('birthdays.add.addButton')}
             onPress={onPress}
-            loading={mutation.isPending}
+            loading={loading}
         />
     )
 }
 
 export default function AddScreen() {
     const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
     const navigation = useNavigation();
     const [name, setName] = useState('')
     const [date, setDate] = useState<number>(() => getStartOfDay());
     const [yearString, setYearString] = useState('');
     const [t] = useTranslation();
+    const router = useRouter();
+
+    const save = useCallback(async () => {
+        const normalizedName = normalizeRequiredText(name);
+        const year = parseBirthYear(yearString);
+        const nextErrors = {
+            name: normalizedName ? undefined : t('validation.required'),
+            year: year === undefined ? t('validation.birthYear') : undefined,
+        };
+        setErrors(nextErrors);
+        if (!normalizedName || year === undefined) {
+            return;
+        }
+        const saved = await mutation.run(() => addBirthday(normalizedName, getMonthAndDay(date), year));
+        if (saved) {
+            router.back();
+        }
+    }, [date, mutation, name, router, t, yearString]);
 
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
-                mutation={mutation}
-                date={date}
-                title={name}
-                yearString={yearString}
+                loading={mutation.isPending}
+                onPress={save}
             />
         )})
-    }, [mutation, navigation, date, yearString, name])
+    }, [mutation.isPending, navigation, save])
 
     return (
         <View
@@ -76,12 +83,14 @@ export default function AddScreen() {
                 onChange={setName}
                 value={name}
                 type='text'
+                error={errors.name}
             />
             <Input
                 label={t('birthdays.add.inputLabels.year')}
                 onChange={setYearString}
                 value={yearString}
                 type='numeric'
+                error={errors.year}
             />
             <InputCalendar
                 label={t('birthdays.add.inputLabels.date')}

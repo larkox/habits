@@ -11,72 +11,75 @@ import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useBirthday } from '@/store/hooks';
 import { removeBirthday, updateBirthday } from '@/store/storage';
-import { getMonthAndDay, getNextMonthAndDay } from '@/utils/time';
+import { getMonthAndDay, getMonthAndDayTimestamp } from '@/utils/time';
+import { normalizeRequiredText, parseBirthYear } from '@/utils/validation';
+
+type FormErrors = {
+    name?: string;
+    year?: string;
+};
 
 type SaveButtonProps = {
-    mutation: ReturnType<typeof useStorageMutation>;
-    date: number;
-    name: string;
-    yearString: string;
-    id: string;
+    loading: boolean;
+    onPress: () => void;
 }
 
 function SaveButton({
-    mutation,
-    date,
-    name,
-    yearString,
-    id,
+    loading,
+    onPress,
 }: SaveButtonProps) {
-    const router = useRouter();
     const [t] = useTranslation();
-
-    const onPress = useCallback(async () => {
-        const year = parseInt(yearString, 10);
-        if (isNaN(year)) {
-            return;
-        }
-        const saved = await mutation.run(() => updateBirthday(id, name, getMonthAndDay(date), year));
-        if (saved) {
-            router.back();
-        }
-    }, [mutation, date, id, name, yearString, router]);
 
     return (
         <Button
             text={t('birthdays.edit.saveButton')}
             onPress={onPress}
-            loading={mutation.isPending}
+            loading={loading}
         />
     )
 }
 
 export default function EditScreen() {
     const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
     const router = useRouter();
     const {id} = useLocalSearchParams<{id: string}>();
     const birthday = useBirthday(id);
     const navigation = useNavigation();
     const [name, setName] = useState(birthday?.name || '');
-    const [date, setDate] = useState(birthday?.date ? getNextMonthAndDay(birthday.date) : 0);
+    const [date, setDate] = useState(birthday?.date ? getMonthAndDayTimestamp(birthday.date) : 0);
     const [yearString, setYearString] = useState(birthday?.year.toString() || '');
     const [t] = useTranslation();
+
+    const save = useCallback(async () => {
+        const normalizedName = normalizeRequiredText(name);
+        const year = parseBirthYear(yearString);
+        const nextErrors = {
+            name: normalizedName ? undefined : t('validation.required'),
+            year: year === undefined ? t('validation.birthYear') : undefined,
+        };
+        setErrors(nextErrors);
+        if (!normalizedName || year === undefined) {
+            return;
+        }
+        const saved = await mutation.run(() => updateBirthday(id, normalizedName, getMonthAndDay(date), year));
+        if (saved) {
+            router.back();
+        }
+    }, [date, id, mutation, name, router, t, yearString]);
 
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
-                mutation={mutation}
-                date={date}
-                name={name}
-                yearString={yearString}
-                id={id}
+                loading={mutation.isPending}
+                onPress={save}
             />
         )})
-    }, [mutation, id, navigation, date, name, yearString])
+    }, [mutation.isPending, navigation, save])
 
     useEffect(() => {
         setName(birthday?.name || '');
-        setDate(birthday?.date ? getNextMonthAndDay(birthday.date) : 0);
+        setDate(birthday?.date ? getMonthAndDayTimestamp(birthday.date) : 0);
         setYearString(birthday?.year.toString() || '')
     }, [birthday]);
 
@@ -96,12 +99,14 @@ export default function EditScreen() {
                 onChange={setName}
                 value={name}
                 type='text'
+                error={errors.name}
             />
             <Input
                 label={t('birthdays.add.inputLabels.year')}
                 onChange={setYearString}
                 value={yearString}
-                type='text'
+                type='numeric'
+                error={errors.year}
             />
             <InputCalendar
                 label={t('birthdays.add.inputLabels.date')}

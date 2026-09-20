@@ -32,7 +32,11 @@ export default function useStorageMutation() {
                 return false;
             }
             if (!result.ok) {
-                Alert.alert(t('errors.storageTitle'), t('errors.storageMessage'));
+                const isValidationError = result.error.code === 'validation_error';
+                Alert.alert(
+                    t(isValidationError ? 'errors.validationTitle' : 'errors.storageTitle'),
+                    t(isValidationError ? 'errors.validationMessage' : 'errors.storageMessage'),
+                );
                 return false;
             }
             return true;
