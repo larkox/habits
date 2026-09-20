@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -11,12 +12,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     value: string;
     valueId?: string;
     chartId: string;
 }
 
 function SaveButton({
+    mutation,
     value,
     valueId,
     chartId,
@@ -24,24 +27,25 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
+    const onPress = useCallback(async () => {
         const numberValue = parseFloat(value);
         if (isNaN(numberValue)) {
             return;
         }
-        if (valueId) {
-            updateChartValue(chartId, valueId, numberValue);
-        } else {
-            addChartValue(chartId, numberValue);
+        const saved = await mutation.run(() => valueId
+            ? updateChartValue(chartId, valueId, numberValue)
+            : addChartValue(chartId, numberValue));
+        if (saved) {
+            router.back();
         }
-        router.back();
-    }, [value, valueId, chartId, router]);
+    }, [mutation, value, valueId, chartId, router]);
 
     const text = valueId ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
-    return <Button text={text} onPress={onPress}/>
+    return <Button text={text} onPress={onPress} loading={mutation.isPending}/>
 }
 
 export default function AddChartValue() {
+    const mutation = useStorageMutation();
     const {id: chartId} = useLocalSearchParams<{id: string}>();
     const navigation = useNavigation();
     const values = useChartValues(chartId);
@@ -61,9 +65,9 @@ export default function AddChartValue() {
 
     useEffect(() => {
         navigation.setOptions({
-            headerRight: () => <SaveButton value={value} chartId={chartId} valueId={todayValue?.id}/>,
+            headerRight: () => <SaveButton mutation={mutation} value={value} chartId={chartId} valueId={todayValue?.id}/>,
         })
-    }, [chartId, navigation, value, todayValue?.id])
+    }, [mutation, chartId, navigation, value, todayValue?.id])
 
     return (
         <View

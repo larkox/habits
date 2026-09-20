@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -11,12 +12,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     date: number;
     title: string;
     yearString: string;
 }
 
 function SaveButton({
+    mutation,
     date,
     title,
     yearString,
@@ -24,21 +27,24 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
+    const onPress = useCallback(async () => {
         const year = parseInt(yearString, 10);
         if (isNaN(year)) {
             return;
         }
-        addBirthday(title, getMonthAndDay(date), year);
-        router.back();
-    }, [title, date, yearString, router]);
+        const saved = await mutation.run(() => addBirthday(title, getMonthAndDay(date), year));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, title, date, yearString, router]);
 
     return (
-        <Button text={t('birthdays.add.addButton')} onPress={onPress}/>
+        <Button text={t('birthdays.add.addButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 
 export default function AddScreen() {
+    const mutation = useStorageMutation();
     const navigation = useNavigation();
     const [name, setName] = useState('')
     const [date, setDate] = useState<number>(() => getStartOfDay());
@@ -48,12 +54,13 @@ export default function AddScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 date={date}
                 title={name}
                 yearString={yearString}
             />
         )})
-    }, [navigation, date, yearString, name])
+    }, [mutation, navigation, date, yearString, name])
 
     return (
         <View

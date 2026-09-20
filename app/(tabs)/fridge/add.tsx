@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -11,28 +12,33 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     expiryDate: number;
     title: string;
 }
 
 function SaveButton({
+    mutation,
     expiryDate,
     title,
 }: SaveButtonProps) {
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
-        addFridgeFood(title, expiryDate);
-        router.back();
-    }, [title, expiryDate, router]);
+    const onPress = useCallback(async () => {
+        const saved = await mutation.run(() => addFridgeFood(title, expiryDate));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, title, expiryDate, router]);
 
     return (
-        <Button text={t('fridge.addFood.addButton')} onPress={onPress}/>
+        <Button text={t('fridge.addFood.addButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 
 export default function AddScreen() {
+    const mutation = useStorageMutation();
     const navigation = useNavigation();
     const [name, setName] = useState('')
     const [expiryDate, setExpiryDate] = useState<number>(() => getStartOfDay());
@@ -41,11 +47,12 @@ export default function AddScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 expiryDate={expiryDate}
                 title={name}
             />
         )})
-    }, [navigation, expiryDate, name])
+    }, [mutation, navigation, expiryDate, name])
 
     return (
         <View

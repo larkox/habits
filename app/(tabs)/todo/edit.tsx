@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -12,12 +13,14 @@ import { useTranslation } from 'react-i18next';
 import InputCalendar from '@/components/base/InputCalendar';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     date: number;
     name: string;
     id: string;
 }
 
 function SaveButton({
+    mutation,
     date,
     name,
     id,
@@ -25,17 +28,20 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
-        updateTodo(id, name, date);
-        router.back();
-    }, [date, id, name, router]);
+    const onPress = useCallback(async () => {
+        const saved = await mutation.run(() => updateTodo(id, name, date));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, date, id, name, router]);
 
     return (
-        <Button text={t('todo.editTodo.saveButton')} onPress={onPress}/>
+        <Button text={t('todo.editTodo.saveButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 
 export default function EditScreen() {
+    const mutation = useStorageMutation();
     const {id} = useLocalSearchParams<{id: string}>();
     const todo = useTodo(id);
     const navigation = useNavigation();
@@ -46,12 +52,13 @@ export default function EditScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 date={date}
                 name={name}
                 id={id}
             />
         )})
-    }, [id, navigation, date, name])
+    }, [mutation, id, navigation, date, name])
 
     useEffect(() => {
         setName(todo?.name || '');

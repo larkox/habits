@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { ThemeColors } from "@/hooks/useThemeColor";
 import { useHabit } from "@/store/hooks";
 import { doHabit } from "@/store/storage";
@@ -17,13 +18,14 @@ type Props = {
 export default function Habit({
     id,
 }: Props) {
+    const mutation = useStorageMutation();
     const habit = useHabit(id);
     const [t] = useTranslation();
     const router = useRouter();
 
     const doCallback = useCallback(() => {
-        doHabit(id);
-    }, [id]);
+        void mutation.run(() => doHabit(id));
+    }, [id, mutation]);
 
     const longPressCallback = useCallback(() => {
         router.navigate(`/(tabs)/habits/edit?id=${id}`);
@@ -58,6 +60,7 @@ export default function Habit({
     return (
         <Pressable
             onLongPress={longPressCallback}
+            disabled={mutation.isPending}
         >
             <View
                 color={viewColor}
@@ -70,6 +73,7 @@ export default function Habit({
                 </View>
                 <Button
                     onPress={doCallback}
+                    loading={mutation.isPending}
                     text={doText}
                     disabled={done}
                 />

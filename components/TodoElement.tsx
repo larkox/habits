@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { ThemeColors } from "@/hooks/useThemeColor";
 import { useTodo } from "@/store/hooks";
 import { removeTodo } from "@/store/storage";
@@ -17,13 +18,14 @@ type Props = {
 export default function Todo({
     id,
 }: Props) {
+    const mutation = useStorageMutation();
     const todo = useTodo(id);
     const [t] = useTranslation();
     const router = useRouter();
 
     const doneCallback = useCallback(() => {
-        removeTodo(id);
-    }, [id]);
+        void mutation.run(() => removeTodo(id));
+    }, [id, mutation]);
 
     const longPressCallback = useCallback(() => {
         router.navigate(`/(tabs)/todo/edit?id=${id}`);
@@ -50,6 +52,7 @@ export default function Todo({
     return (
         <Pressable
             onLongPress={longPressCallback}
+            disabled={mutation.isPending}
         >
             <View
                 color={viewColor}
@@ -62,6 +65,7 @@ export default function Todo({
                 </View>
                 <Button
                     onPress={doneCallback}
+                    loading={mutation.isPending}
                     text={doText}
                 />
             </View>

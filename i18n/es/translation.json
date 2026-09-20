@@ -1,3 +1,7 @@
 {
+	"errors": {
+		"storageTitle": "No se pudieron guardar los cambios",
+		"storageMessage": "Vuelve a intentarlo."
+	},
 	"habit": "Hábito"
 }

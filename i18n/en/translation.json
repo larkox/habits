@@ -1,4 +1,8 @@
 {
+	"errors": {
+		"storageTitle": "Could not save changes",
+		"storageMessage": "Please try again."
+	},
 	"habits": {
 		"title": "Habits",
 		"addButton": "Add habit",

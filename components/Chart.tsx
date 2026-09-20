@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { useChart, useChartValues } from "@/store/hooks";
 import { removeChart } from "@/store/storage";
 import { getChartValueForToday } from "@/utils/charts";
@@ -17,6 +18,7 @@ type Props = {
 export default function Chart({
     id,
 }: Props) {
+    const mutation = useStorageMutation();
     const router = useRouter();
     const chart = useChart(id);
     const values = useChartValues(id);
@@ -33,8 +35,8 @@ export default function Chart({
     }, [id, router]);
 
     const deleteCallback = useCallback(() => {
-        removeChart(id);
-    }, [id])
+        void mutation.run(() => removeChart(id));
+    }, [id, mutation])
 
     if (!chart) {
         return;
@@ -63,10 +65,12 @@ export default function Chart({
             >
                 <Button
                     onPress={doCallback}
+                    disabled={mutation.isPending}
                     text={addText}
                 />
                 <Button
                     onPress={deleteCallback}
+                    loading={mutation.isPending}
                     text={t('charts.deleteButton')}
                 />
             </View>

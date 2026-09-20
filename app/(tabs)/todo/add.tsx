@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -11,28 +12,33 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     date: number;
     title: string;
 }
 
 function SaveButton({
+    mutation,
     date,
     title,
 }: SaveButtonProps) {
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
-        addTodo(title, date);
-        router.back();
-    }, [title, date, router]);
+    const onPress = useCallback(async () => {
+        const saved = await mutation.run(() => addTodo(title, date));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, title, date, router]);
 
     return (
-        <Button text={t('todo.addTodo.addButton')} onPress={onPress}/>
+        <Button text={t('todo.addTodo.addButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 
 export default function AddScreen() {
+    const mutation = useStorageMutation();
     const navigation = useNavigation();
     const [name, setName] = useState('')
     const [date, setDate] = useState<number>(() => getStartOfDay());
@@ -41,11 +47,12 @@ export default function AddScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 date={date}
                 title={name}
             />
         )})
-    }, [navigation, date, name])
+    }, [mutation, navigation, date, name])
 
     return (
         <View

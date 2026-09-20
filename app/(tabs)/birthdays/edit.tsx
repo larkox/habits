@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -13,6 +14,7 @@ import InputCalendar from '@/components/base/InputCalendar';
 import { getMonthAndDay, getNextMonthAndDay } from '@/utils/time';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     date: number;
     name: string;
     yearString: string;
@@ -20,6 +22,7 @@ type SaveButtonProps = {
 }
 
 function SaveButton({
+    mutation,
     date,
     name,
     yearString,
@@ -28,21 +31,24 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
+    const onPress = useCallback(async () => {
         const year = parseInt(yearString, 10);
         if (isNaN(year)) {
             return;
         }
-        updateBirthday(id, name, getMonthAndDay(date), year);
-        router.back();
-    }, [date, id, name, yearString, router]);
+        const saved = await mutation.run(() => updateBirthday(id, name, getMonthAndDay(date), year));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, date, id, name, yearString, router]);
 
     return (
-        <Button text={t('birthdays.edit.saveButton')} onPress={onPress}/>
+        <Button text={t('birthdays.edit.saveButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 
 export default function EditScreen() {
+    const mutation = useStorageMutation();
     const router = useRouter();
     const {id} = useLocalSearchParams<{id: string}>();
     const birthday = useBirthday(id);
@@ -55,13 +61,14 @@ export default function EditScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 date={date}
                 name={name}
                 yearString={yearString}
                 id={id}
             />
         )})
-    }, [id, navigation, date, name, yearString])
+    }, [mutation, id, navigation, date, name, yearString])
 
     useEffect(() => {
         setName(birthday?.name || '');
@@ -69,10 +76,12 @@ export default function EditScreen() {
         setYearString(birthday?.year.toString() || '')
     }, [birthday]);
 
-    const deleteCallback = useCallback(() => {
-        removeBirthday(id);
-        router.back();
-    }, [router, id])
+    const deleteCallback = useCallback(async () => {
+        const removed = await mutation.run(() => removeBirthday(id));
+        if (removed) {
+            router.back();
+        }
+    }, [mutation, router, id])
 
     return (
         <View
@@ -99,6 +108,7 @@ export default function EditScreen() {
                 <Button
                     text={t('birthdays.edit.deleteButton')}
                     onPress={deleteCallback}
+                    loading={mutation.isPending}
                 />
             </View>
         </View>

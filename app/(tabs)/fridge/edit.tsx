@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -12,12 +13,14 @@ import { useTranslation } from 'react-i18next';
 import InputCalendar from '@/components/base/InputCalendar';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     expiryDate: number;
     name: string;
     id: string;
 }
 
 function SaveButton({
+    mutation,
     expiryDate,
     name,
     id,
@@ -25,16 +28,19 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
-        updateFoodFromFridge(id, name, expiryDate);
-        router.back();
-    }, [expiryDate, id, name, router]);
+    const onPress = useCallback(async () => {
+        const saved = await mutation.run(() => updateFoodFromFridge(id, name, expiryDate));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, expiryDate, id, name, router]);
 
     return (
-        <Button text={t('fridge.editFood.saveButton')} onPress={onPress}/>
+        <Button text={t('fridge.editFood.saveButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 export default function EditScreen() {
+    const mutation = useStorageMutation();
     const {id} = useLocalSearchParams<{id: string}>();
     const food = useFood(id);
     const navigation = useNavigation();
@@ -45,12 +51,13 @@ export default function EditScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 expiryDate={expiryDate}
                 name={name}
                 id={id}
             />
         )})
-    }, [id, navigation, expiryDate, name])
+    }, [mutation, id, navigation, expiryDate, name])
 
     useEffect(() => {
         setName(food?.name || '');

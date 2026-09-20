@@ -1,3 +1,4 @@
+import type { Result } from "@/types/result";
 import { Birthday, Chart, ChartValue, FridgeFood, Habit, Todo } from "@/types/model";
 import { newId } from "@/utils/crypto";
 import { logError } from "@/utils/log";
@@ -39,46 +40,54 @@ export async function getHabitCalendar(id: string, monthStart: number) {
     }
 }
 
-export async function doHabit(id: string) {
+export async function doHabit(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         const date = getStartOfDay();
         await db.runAsync('UPDATE habits SET lastDone = ? WHERE id = ?', date, id);
         await db.runAsync('INSERT INTO habitHistory (id, habitId, date) VALUES (?, ?, ?)', newId(), id, date)
         sendUpdateEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error doing a habit', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function addHabit(title: string, periodicity: number) {
+export async function addHabit(title: string, periodicity: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO habits (id, title, periodicity, lastDone) VALUES (?, ?, ?, ?)', newId(), title, periodicity, getYesterday())
         sendAddEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error adding a habit', error)
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function updateHabit(id: string, title: string, periodicity: number) {
+export async function updateHabit(id: string, title: string, periodicity: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE habits SET title = ?, periodicity = ? WHERE id = ?', title, periodicity, id);
         sendUpdateEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error updating a habit', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function removeHabit(id: string) {
+export async function removeHabit(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db?.runAsync('DELETE FROM habits WHERE id = ?', id);
         await db?.runAsync('DELETE FROM habitHistory WHERE habitId = ?', id)
         sendRemoveEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error removing a habit', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
@@ -92,44 +101,52 @@ export async function getAllChartIDs() {
     }    
 }
 
-export async function addChart(title: string) {
+export async function addChart(title: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO charts (id, title) VALUES (?, ?)', newId(), title)
         sendAddChartEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error adding chart', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function removeChart(id: string) {
+export async function removeChart(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('DELETE FROM charts WHERE id = ?', id);
         await db.runAsync('DELETE FROM chart_values WHERE chartId = ?', id);
         sendRemoveChartEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error removing chart', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function addChartValue(chartId: string, value: number) {
+export async function addChartValue(chartId: string, value: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO chart_values (id, chartId, value, date) VALUES (?, ?, ?, ?)', newId(), chartId, value, getStartOfDay());
         sendAddChartValueEvents(chartId);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error adding chart value', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function updateChartValue(chartId: string, valueId: string, value: number) {
+export async function updateChartValue(chartId: string, valueId: string, value: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE chart_values SET value = ? WHERE id = ?', value, valueId);
         sendAddChartValueEvents(chartId);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error updating chart value', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
@@ -158,13 +175,15 @@ export async function getChartValues(chartId: string) {
     }
 }
 
-export async function addFridgeFood(name: string, date: number) {
+export async function addFridgeFood(name: string, date: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO fridge (id, name, date) VALUES (?, ?, ?)', newId(), name, date);
         sendAddFridgeFoodEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('errror adding fridge food', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
@@ -193,33 +212,39 @@ export async function getFridgeFood(id: string) {
     }
 }
 
-export async function removeFoodFromFridge(id: string) {
+export async function removeFoodFromFridge(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('DELETE FROM fridge WHERE id = ?', id);
         sendRemoveFridgeFoodEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error removing food from fridge', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function updateFoodFromFridge(id: string, name: string, expiryDate: number) {
+export async function updateFoodFromFridge(id: string, name: string, expiryDate: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE fridge SET name = ?, date = ? WHERE id = ?', name, expiryDate, id);
         sendUpdateFridgeFoodEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error updating a food from fridge', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function addTodo(name: string, date: number) {
+export async function addTodo(name: string, date: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO todos (id, name, date) VALUES (?, ?, ?)', newId(), name, date);
         sendAddTodoEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error adding todo', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
@@ -248,34 +273,40 @@ export async function getTodo(id: string) {
     }
 }
 
-export async function updateTodo(id: string, name: string, date: number) {
+export async function updateTodo(id: string, name: string, date: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE todos SET name = ?, date = ? WHERE id = ?', name, date, id);
         sendUpdateTodoEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error updating a todo', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function removeTodo(id: string) {
+export async function removeTodo(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('DELETE FROM todos WHERE id = ?', id);
         sendRemoveTodoEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error removing todo', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
 
-export async function addBirthday(name: string, date: string, year: number) {
+export async function addBirthday(name: string, date: string, year: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('INSERT INTO birthdays (id, name, date, year) VALUES (?, ?, ?, ?)', newId(), name, date, year);
         sendAddBirthdayEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error adding birthday', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
@@ -304,22 +335,26 @@ export async function getBirthday(id: string) {
     }
 }
 
-export async function updateBirthday(id: string, name: string, date: string, year: number) {
+export async function updateBirthday(id: string, name: string, date: string, year: number): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('UPDATE birthdays SET name = ?, date = ?, year = ? WHERE id = ?', name, date, year, id);
         sendUpdateBirthdayEvents(id);
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error updating a birthday', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }
 
-export async function removeBirthday(id: string) {
+export async function removeBirthday(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('DELETE FROM birthdays WHERE id = ?', id);
         sendRemoveBirthdayEvents();
+        return { ok: true, value: undefined };
     } catch (error) {
         logError('error removing a birthday', error);
+        return { ok: false, error: { code: 'storage_error' } };
     }
 }

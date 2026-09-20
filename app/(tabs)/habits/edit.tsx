@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -12,12 +13,14 @@ import { useTranslation } from 'react-i18next';
 import HabitCalendar from '@/components/HabitCalendar';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     periodicity: string;
     title: string;
     id: string;
 }
 
 function SaveButton({
+    mutation,
     periodicity,
     title,
     id,
@@ -25,20 +28,23 @@ function SaveButton({
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
+    const onPress = useCallback(async () => {
         const numberValue = parseInt(periodicity, 10);
         if (isNaN(numberValue)) {
             return;
         }
-        updateHabit(id, title, numberValue);
-        router.back();
-    }, [periodicity, id, title, router]);
+        const saved = await mutation.run(() => updateHabit(id, title, numberValue));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, periodicity, id, title, router]);
 
     return (
-        <Button text={t('habits.editHabit.saveButton')} onPress={onPress}/>
+        <Button text={t('habits.editHabit.saveButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 export default function EditScreen() {
+    const mutation = useStorageMutation();
     const router = useRouter();
     const {id} = useLocalSearchParams<{id: string}>();
     const habit = useHabit(id);
@@ -50,22 +56,25 @@ export default function EditScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 periodicity={periodicity}
                 title={title}
                 id={id}
             />
         )})
-    }, [id, navigation, periodicity, title])
+    }, [mutation, id, navigation, periodicity, title])
 
     useEffect(() => {
         setTitle(habit?.title || '');
         setPeriodicity(habit?.periodicity.toString() || '');
     }, [habit]);
 
-    const deleteCallback = useCallback(() => {
-        removeHabit(id);
-        router.back();
-    }, [router, id])
+    const deleteCallback = useCallback(async () => {
+        const removed = await mutation.run(() => removeHabit(id));
+        if (removed) {
+            router.back();
+        }
+    }, [mutation, router, id])
     return (
         <View
             style={styles.container}
@@ -87,6 +96,7 @@ export default function EditScreen() {
                 <Button
                     text={t('habits.deleteButton')}
                     onPress={deleteCallback}
+                    loading={mutation.isPending}
                 />
             </View>
         </View>

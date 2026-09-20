@@ -1,3 +1,4 @@
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { StyleSheet } from 'react-native';
 
 import Button from '@/components/base/Button';
@@ -9,31 +10,36 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
+    mutation: ReturnType<typeof useStorageMutation>;
     periodicity: string;
     title: string;
 }
 
 function SaveButton({
+    mutation,
     periodicity,
     title,
 }: SaveButtonProps) {
     const router = useRouter();
     const [t] = useTranslation();
 
-    const onPress = useCallback(() => {
+    const onPress = useCallback(async () => {
         const numberValue = parseInt(periodicity, 10);
         if (isNaN(numberValue)) {
             return;
         }
-        addHabit(title, numberValue);
-        router.back();
-    }, [title, periodicity, router]);
+        const saved = await mutation.run(() => addHabit(title, numberValue));
+        if (saved) {
+            router.back();
+        }
+    }, [mutation, title, periodicity, router]);
 
     return (
-        <Button text={t('habits.addHabit.addButton')} onPress={onPress}/>
+        <Button text={t('habits.addHabit.addButton')} onPress={onPress} loading={mutation.isPending}/>
     )
 }
 export default function AddScreen() {
+    const mutation = useStorageMutation();
     const navigation = useNavigation();
     const [title, setTitle] = useState('')
     const [periodicity, setPeriodicity] = useState('');
@@ -42,11 +48,12 @@ export default function AddScreen() {
     useEffect(() => {
         navigation.setOptions({headerRight: () => (
             <SaveButton
+                mutation={mutation}
                 periodicity={periodicity}
                 title={title}
             />
         )})
-    }, [navigation, periodicity, title])
+    }, [mutation, navigation, periodicity, title])
 
     return (
         <View
