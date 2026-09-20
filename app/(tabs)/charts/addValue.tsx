@@ -9,20 +9,20 @@ import Input from '@/components/base/Input';
 import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useChartValues } from '@/store/hooks';
-import { addChartValue, updateChartValue } from '@/store/storage';
+import { setChartValue } from '@/store/storage';
 import { getChartValueForToday } from '@/utils/charts';
 
 type SaveButtonProps = {
     mutation: ReturnType<typeof useStorageMutation>;
     value: string;
-    valueId?: string;
+    isUpdate: boolean;
     chartId: string;
 }
 
 function SaveButton({
     mutation,
     value,
-    valueId,
+    isUpdate,
     chartId,
 }: SaveButtonProps) {
     const router = useRouter();
@@ -33,15 +33,13 @@ function SaveButton({
         if (isNaN(numberValue)) {
             return;
         }
-        const saved = await mutation.run(() => valueId
-            ? updateChartValue(chartId, valueId, numberValue)
-            : addChartValue(chartId, numberValue));
+        const saved = await mutation.run(() => setChartValue(chartId, numberValue));
         if (saved) {
             router.back();
         }
-    }, [mutation, value, valueId, chartId, router]);
+    }, [mutation, value, chartId, router]);
 
-    const text = valueId ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
+    const text = isUpdate ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
     return <Button
         text={text}
         onPress={onPress}
@@ -74,10 +72,10 @@ export default function AddChartValue() {
                 mutation={mutation}
                 value={value}
                 chartId={chartId}
-                valueId={todayValue?.id}
+                isUpdate={Boolean(todayValue)}
             />,
         })
-    }, [mutation, chartId, navigation, value, todayValue?.id])
+    }, [mutation, chartId, navigation, value, todayValue])
 
     return (
         <View

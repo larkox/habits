@@ -6,6 +6,7 @@ import { getMonthEnd, getStartOfDay, getYesterday } from "@/utils/time";
 
 import { getDatabase } from "./db";
 import { sendAddBirthdayEvents, sendAddChartEvents, sendAddChartValueEvents, sendAddEvents, sendAddFridgeFoodEvents, sendAddTodoEvents, sendRemoveBirthdayEvents, sendRemoveChartEvents, sendRemoveEvents, sendRemoveFridgeFoodEvents, sendRemoveTodoEvents, sendUpdateBirthdayEvents, sendUpdateEvents, sendUpdateFridgeFoodEvents, sendUpdateTodoEvents } from "./events";
+import { withWriteTransaction } from './transactions';
 
 export async function getAllHabits() {
     try {
@@ -45,8 +46,21 @@ export async function doHabit(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         const date = getStartOfDay();
-        await db.runAsync('UPDATE habits SET lastDone = ? WHERE id = ?', date, id);
-        await db.runAsync('INSERT INTO habitHistory (id, habitId, date) VALUES (?, ?, ?)', newId(), id, date)
+        await withWriteTransaction(db, async (transaction) => {
+            await transaction.runAsync(
+                `INSERT INTO habitHistory (id, habitId, date)
+                 VALUES (?, ?, ?)
+                 ON CONFLICT(habitId, date) DO NOTHING`,
+                newId(),
+                id,
+                date,
+            );
+            await transaction.runAsync(
+                'UPDATE habits SET lastDone = ? WHERE id = ?',
+                date,
+                id,
+            );
+        });
         sendUpdateEvents(id);
         return { ok: true, value: undefined };
     } catch (error) {
@@ -82,8 +96,7 @@ export async function updateHabit(id: string, title: string, periodicity: number
 export async function removeHabit(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
-        await db?.runAsync('DELETE FROM habits WHERE id = ?', id);
-        await db?.runAsync('DELETE FROM habitHistory WHERE habitId = ?', id)
+        await db.runAsync('DELETE FROM habits WHERE id = ?', id);
         sendRemoveEvents(id);
         return { ok: true, value: undefined };
     } catch (error) {
@@ -118,7 +131,6 @@ export async function removeChart(id: string): Promise<Result> {
     try {
         const db = await getDatabase();
         await db.runAsync('DELETE FROM charts WHERE id = ?', id);
-        await db.runAsync('DELETE FROM chart_values WHERE chartId = ?', id);
         sendRemoveChartEvents();
         return { ok: true, value: undefined };
     } catch (error) {
@@ -127,26 +139,23 @@ export async function removeChart(id: string): Promise<Result> {
     }
 }
 
-export async function addChartValue(chartId: string, value: number): Promise<Result> {
+export async function setChartValue(chartId: string, value: number): Promise<Result> {
     try {
         const db = await getDatabase();
-        await db.runAsync('INSERT INTO chart_values (id, chartId, value, date) VALUES (?, ?, ?, ?)', newId(), chartId, value, getStartOfDay());
+        await db.runAsync(
+            `INSERT INTO chart_values (id, chartId, value, date)
+             VALUES (?, ?, ?, ?)
+             ON CONFLICT(chartId, date)
+             DO UPDATE SET value = excluded.value`,
+            newId(),
+            chartId,
+            value,
+            getStartOfDay(),
+        );
         sendAddChartValueEvents(chartId);
         return { ok: true, value: undefined };
     } catch (error) {
-        logError('error adding chart value', error);
-        return { ok: false, error: { code: 'storage_error' } };
-    }
-}
-
-export async function updateChartValue(chartId: string, valueId: string, value: number): Promise<Result> {
-    try {
-        const db = await getDatabase();
-        await db.runAsync('UPDATE chart_values SET value = ? WHERE id = ?', value, valueId);
-        sendAddChartValueEvents(chartId);
-        return { ok: true, value: undefined };
-    } catch (error) {
-        logError('error updating chart value', error);
+        logError('error setting chart value', error);
         return { ok: false, error: { code: 'storage_error' } };
     }
 }

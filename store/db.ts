@@ -1,56 +1,19 @@
 import * as SQLite from 'expo-sqlite';
 
-let db: SQLite.SQLiteDatabase | undefined;
+import { runMigrations } from './migrations/runner';
+
+let databasePromise: Promise<SQLite.SQLiteDatabase> | undefined;
 
 async function initDatabase() {
-    if (db) {
-        return;
-    }
+    const database = await SQLite.openDatabaseAsync('habitDatabase');
 
-    const newDb = await SQLite.openDatabaseAsync('habitDatabase');
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS habits (
-        id TEXT PRIMARY KEY NOT NULL,
-        title TEXT,
-        lastDone INTEGER,
-        periodicity INTEGER
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS charts (
-        id TEXT PRIMARY KEY NOT NULL,
-        title TEXT
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS chart_values (
-        id TEXT PRIMARY KEY NOT NULL,
-        chartId TEXT,
-        value FLOAT,
-        date INTEGER,
-        FOREIGN KEY (chartId) REFERENCES charts(id)
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS habitHistory (
-        id TEXT PRIMARY KEY NOT null,
-        habitId TEXT,
-        date INTEGER,
-        FOREIGN KEY (habitId) REFERENCES habits(id)
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS fridge (
-        id TEXT PRIMARY KEY NOT null,
-        name TEXT,
-        date INTEGER
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS todos (
-        id TEXT PRIMARY KEY NOT null,
-        name Text,
-        date INTEGER
-    )`)
-    await newDb.runAsync(`CREATE TABLE IF NOT EXISTS birthdays (
-        id TEXT PRIMARY KEY NOT null,
-        name TEXT,
-        date TEXT,
-        year INTEGER
-    )`)
-    db = newDb;
+    await database.execAsync('PRAGMA foreign_keys = ON');
+    await runMigrations(database);
+
+    return database;
 }
 
-export async function getDatabase() {
-    await initDatabase();
-    return db!;
+export function getDatabase() {
+    databasePromise ??= initDatabase();
+    return databasePromise;
 }
