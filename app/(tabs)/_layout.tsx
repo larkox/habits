@@ -1,11 +1,12 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
+
+import { Tabs } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -23,11 +24,16 @@ export default function TabLayout() {
                     },
                     default: {},
                 }),
-            }}>
+            }}
+        >
             <Tabs.Screen
                 name="habits"
                 options={{
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol
+                        size={28}
+                        name="house.fill"
+                        color={color}
+                    />,
                     headerShown: false,
                     title: t('tabs.habits')
                 }}
@@ -35,7 +41,11 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="todo"
                 options={{
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name='checkmark.app.fill' color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol
+                        size={28}
+                        name='checkmark.app.fill'
+                        color={color}
+                    />,
                     headerShown: false,
                     title: t('tabs.todo')
                 }}
@@ -43,7 +53,11 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="fridge"
                 options={{
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name='archivebox.fill' color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol
+                        size={28}
+                        name='archivebox.fill'
+                        color={color}
+                    />,
                     headerShown: false,
                     title: t('tabs.fridge')
                 }}
@@ -51,7 +65,11 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="birthdays"
                 options={{
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name='birthday.cake.fill' color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol
+                        size={28}
+                        name='birthday.cake.fill'
+                        color={color}
+                    />,
                     headerShown: false,
                     title: t('tabs.birthdays')
                 }}
@@ -59,7 +77,11 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="charts"
                 options={{
-                    tabBarIcon: ({color}) => <IconSymbol size={28} name="chart.line.downtrend.xyaxis" color={color} />,
+                    tabBarIcon: ({color}) => <IconSymbol
+                        size={28}
+                        name="chart.line.downtrend.xyaxis"
+                        color={color}
+                    />,
                     headerShown: false,
                     title: t('tabs.charts')
                 }}

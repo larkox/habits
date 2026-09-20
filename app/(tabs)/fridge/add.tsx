@@ -1,15 +1,16 @@
-import useStorageMutation from "@/hooks/useStorageMutation";
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+
+import { useNavigation, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
 import View from '@/components/base/View';
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { addFridgeFood } from '@/store/storage';
 import { getStartOfDay } from '@/utils/time';
-import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
     mutation: ReturnType<typeof useStorageMutation>;
@@ -33,7 +34,11 @@ function SaveButton({
     }, [mutation, title, expiryDate, router]);
 
     return (
-        <Button text={t('fridge.addFood.addButton')} onPress={onPress} loading={mutation.isPending}/>
+        <Button
+            text={t('fridge.addFood.addButton')}
+            onPress={onPress}
+            loading={mutation.isPending}
+        />
     )
 }
 

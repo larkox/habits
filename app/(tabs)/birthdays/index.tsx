@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import View from '@/components/base/View';
 import BirthdayList from '@/components/BirthdayList';
-import { StyleSheet } from 'react-native';
 
 export default function Birthdays() {
     return (

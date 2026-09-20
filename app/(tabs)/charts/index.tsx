@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import View from '@/components/base/View';
 import ChartList from '@/components/ChartList';
-import { StyleSheet } from 'react-native';
 
 export default function ChartListScreen() {
     return (

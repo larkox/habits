@@ -1,5 +1,7 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
 import { InputModeOptions, TextInput } from "react-native";
+
+import { useThemeColor } from "@/hooks/useThemeColor";
+
 import Text from "./Text";
 import View from "./View";
 

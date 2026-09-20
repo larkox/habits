@@ -1,7 +1,8 @@
+import { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import { useTodos } from '@/store/hooks';
-import { useCallback, useMemo } from 'react';
+
 import TodoElement from './TodoElement';
 
 function keyExtractor(item: string) {

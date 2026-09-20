@@ -1,9 +1,9 @@
+import { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import Habit from '@/components/Habit';
 import { useHabitList } from '@/store/hooks';
 import { getDue, isDone } from '@/utils/time';
-import { useCallback, useMemo } from 'react';
 
 function keyExtractor(item: string) {
     return item;

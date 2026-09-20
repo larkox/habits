@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import View from '@/components/base/View';
 import HabitList from '@/components/HabitList';
-import { StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
     return (

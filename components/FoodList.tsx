@@ -1,7 +1,8 @@
+import { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import { useFridgeFood } from '@/store/hooks';
-import { useCallback, useMemo } from 'react';
+
 import Food from './Food';
 
 function keyExtractor(item: string) {

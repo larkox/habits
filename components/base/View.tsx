@@ -1,7 +1,7 @@
+import { ComponentProps, useMemo } from 'react';
 import { View as RNView, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import { ThemeColors, useThemeColor } from '@/hooks/useThemeColor';
-import { ComponentProps, useMemo } from 'react';
 
 export type ViewProps = {
     color?: ThemeColors;

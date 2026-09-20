@@ -1,5 +1,6 @@
-import { useRouter } from "expo-router";
 import { useEffect } from "react";
+
+import { useRouter } from "expo-router";
 
 function MainScreen() {
     const router = useRouter()

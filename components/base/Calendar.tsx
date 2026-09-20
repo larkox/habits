@@ -1,8 +1,10 @@
-import { useThemeColor } from "@/hooks/useThemeColor";
-import type { CalendarDate } from "@/types/calendar";
 import { useCallback, useMemo } from "react";
+
 import { Calendar as NativeCalendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
+
+import { useThemeColor } from "@/hooks/useThemeColor";
+import type { CalendarDate } from "@/types/calendar";
 
 export type CalendarProps = {
     /** Local calendar date in YYYY-MM-DD format. */

@@ -1,16 +1,16 @@
-import useStorageMutation from "@/hooks/useStorageMutation";
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
+import InputCalendar from '@/components/base/InputCalendar';
 import View from '@/components/base/View';
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { useBirthday } from '@/store/hooks';
 import { removeBirthday, updateBirthday } from '@/store/storage';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import InputCalendar from '@/components/base/InputCalendar';
 import { getMonthAndDay, getNextMonthAndDay } from '@/utils/time';
 
 type SaveButtonProps = {
@@ -43,7 +43,11 @@ function SaveButton({
     }, [mutation, date, id, name, yearString, router]);
 
     return (
-        <Button text={t('birthdays.edit.saveButton')} onPress={onPress} loading={mutation.isPending}/>
+        <Button
+            text={t('birthdays.edit.saveButton')}
+            onPress={onPress}
+            loading={mutation.isPending}
+        />
     )
 }
 

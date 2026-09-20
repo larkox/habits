@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
+
 import { Stack, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 
 function AddButton() {
     const router = useRouter();
@@ -24,18 +25,23 @@ export default function HabitLayout() {
     const [t] = useTranslation();
     return (
         <Stack>
-            <Stack.Screen name="index" options={{
-                title: t('habits.title'),
-                headerShown: true,
-                headerRight: AddButton,
-            }} />
-            <Stack.Screen name="add"
+            <Stack.Screen
+                name="index"
+                options={{
+                    title: t('habits.title'),
+                    headerShown: true,
+                    headerRight: AddButton,
+                }}
+            />
+            <Stack.Screen
+                name="add"
                 options={{
                     title: t('habits.addHabit.title'),
                     headerShown: true,
                 }}
             />
-            <Stack.Screen name="edit"
+            <Stack.Screen
+                name="edit"
                 options={{
                     title: t('habits.editHabit.title'),
                     headerShown: true,

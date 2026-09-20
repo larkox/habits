@@ -1,16 +1,16 @@
-import useStorageMutation from "@/hooks/useStorageMutation";
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import View from '@/components/base/View';
+import HabitCalendar from '@/components/HabitCalendar';
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { useHabit } from '@/store/hooks';
 import { removeHabit, updateHabit } from '@/store/storage';
-import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import HabitCalendar from '@/components/HabitCalendar';
 
 type SaveButtonProps = {
     mutation: ReturnType<typeof useStorageMutation>;
@@ -40,7 +40,11 @@ function SaveButton({
     }, [mutation, periodicity, id, title, router]);
 
     return (
-        <Button text={t('habits.editHabit.saveButton')} onPress={onPress} loading={mutation.isPending}/>
+        <Button
+            text={t('habits.editHabit.saveButton')}
+            onPress={onPress}
+            loading={mutation.isPending}
+        />
     )
 }
 export default function EditScreen() {

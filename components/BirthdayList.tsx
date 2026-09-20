@@ -1,9 +1,10 @@
+import { useCallback, useMemo } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import { useBirthdays } from '@/store/hooks';
 import { Birthday } from '@/types/model';
 import { getNextMonthAndDay } from '@/utils/time';
-import { useCallback, useMemo } from 'react';
+
 import BirthdayElement from './BirthdayElement';
 
 function keyExtractor(item: string) {

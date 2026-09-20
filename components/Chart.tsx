@@ -1,12 +1,15 @@
+import { useCallback, useMemo } from "react";
+import { StyleSheet } from "react-native";
+
+import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
+import { LineChart } from "react-native-gifted-charts";
+
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useChart, useChartValues } from "@/store/hooks";
 import { removeChart } from "@/store/storage";
 import { getChartValueForToday } from "@/utils/charts";
-import { useRouter } from "expo-router";
-import { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { StyleSheet } from "react-native";
-import { LineChart } from "react-native-gifted-charts";
+
 import Button from "./base/Button";
 import Text from "./base/Text";
 import View from "./base/View";

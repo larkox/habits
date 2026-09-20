@@ -1,13 +1,14 @@
-import useStorageMutation from "@/hooks/useStorageMutation";
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+
+import { useNavigation, useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import View from '@/components/base/View';
+import useStorageMutation from "@/hooks/useStorageMutation";
 import { addChart } from '@/store/storage';
-import { useNavigation, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 type SaveButtonProps = {
     mutation: ReturnType<typeof useStorageMutation>;
@@ -27,7 +28,11 @@ function AddButton({
         }
     }, [mutation, title, router]);
             
-    return <Button text={t('charts.addChart.addButton')} onPress={onPress} loading={mutation.isPending}/>
+    return <Button
+        text={t('charts.addChart.addButton')}
+        onPress={onPress}
+        loading={mutation.isPending}
+    />
 }
 export default function AddChartScreen() {
     const mutation = useStorageMutation();
@@ -37,7 +42,10 @@ export default function AddChartScreen() {
 
     useEffect(() => {
         navigation.setOptions({
-            headerRight: () => <AddButton mutation={mutation} title={title}/>,
+            headerRight: () => <AddButton
+                mutation={mutation}
+                title={title}
+            />,
         })
     }, [mutation, navigation, title])
 

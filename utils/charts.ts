@@ -1,4 +1,5 @@
 import { ChartValue } from "@/types/model";
+
 import { getStartOfDay } from "./time";
 
 export function getChartValueForToday(values: ChartValue[] | undefined) {

@@ -1,7 +1,8 @@
+import { useCallback } from 'react';
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native';
 
 import { useChartIds } from '@/store/hooks';
-import { useCallback } from 'react';
+
 import Chart from './Chart';
 
 function keyExtractor(item: string) {

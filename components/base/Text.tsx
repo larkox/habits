@@ -1,7 +1,7 @@
+import { ComponentProps } from 'react';
 import { Text as RNText, StyleSheet } from 'react-native';
 
 import { ThemeColors, useThemeColor } from '@/hooks/useThemeColor';
-import { ComponentProps } from 'react';
 
 export type ThemedTextProps = {
     type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';

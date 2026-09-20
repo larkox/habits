@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
+
 import translationEn from './en/translation.json';
 import translationEs from './es/translation.json';
 
@@ -26,6 +27,9 @@ const resources = {
     },
 };
 
+// Ignore the lint warning, since this is the documented
+// way to use the library
+// eslint-disable-next-line import/no-named-as-default-member
 i18next
     .use(initReactI18next)
     .init({

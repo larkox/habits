@@ -1,6 +1,7 @@
+import { StyleSheet } from 'react-native';
+
 import View from '@/components/base/View';
 import TodoList from '@/components/TodoList';
-import { StyleSheet } from 'react-native';
 
 export default function Todo() {
     return (
