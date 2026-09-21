@@ -7,10 +7,13 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
+import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
+import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useBirthday } from '@/store/hooks';
 import { removeBirthday, updateBirthday } from '@/store/storage';
+import type { Birthday } from '@/types/model';
 import { getMonthAndDay, getMonthAndDayTimestamp } from '@/utils/time';
 import { normalizeRequiredText, parseBirthYear } from '@/utils/validation';
 
@@ -40,15 +43,29 @@ function SaveButton({
 }
 
 export default function EditScreen() {
+    const {id} = useLocalSearchParams<{id: string}>();
+    const birthday = useBirthday(id);
+    const loading = useSmartLoading(birthday === undefined);
+
+    if (loading.isLoading || !birthday) {
+        return loading.showLoader ? <Loader /> : null;
+    }
+
+    return <BirthdayForm
+        key={birthday.id}
+        birthday={birthday}
+    />;
+}
+
+function BirthdayForm({birthday}: {birthday: Birthday}) {
     const mutation = useStorageMutation();
     const [errors, setErrors] = useState<FormErrors>({});
     const router = useRouter();
-    const {id} = useLocalSearchParams<{id: string}>();
-    const birthday = useBirthday(id);
+    const id = birthday.id;
     const navigation = useNavigation();
-    const [name, setName] = useState(birthday?.name || '');
-    const [date, setDate] = useState(birthday?.date ? getMonthAndDayTimestamp(birthday.date) : 0);
-    const [yearString, setYearString] = useState(birthday?.year.toString() || '');
+    const [name, setName] = useState(birthday.name);
+    const [date, setDate] = useState(getMonthAndDayTimestamp(birthday.date));
+    const [yearString, setYearString] = useState(birthday.year.toString());
     const [t] = useTranslation();
 
     const save = useCallback(async () => {
@@ -76,12 +93,6 @@ export default function EditScreen() {
             />
         )})
     }, [mutation.isPending, navigation, save])
-
-    useEffect(() => {
-        setName(birthday?.name || '');
-        setDate(birthday?.date ? getMonthAndDayTimestamp(birthday.date) : 0);
-        setYearString(birthday?.year.toString() || '')
-    }, [birthday]);
 
     const deleteCallback = useCallback(async () => {
         const removed = await mutation.run(() => removeBirthday(id));

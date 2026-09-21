@@ -7,10 +7,13 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
+import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
+import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useTodo } from '@/store/hooks';
 import { updateTodo } from '@/store/storage';
+import type { Todo } from '@/types/model';
 import { normalizeRequiredText } from '@/utils/validation';
 
 type FormErrors = {
@@ -38,13 +41,27 @@ function SaveButton({
 }
 
 export default function EditScreen() {
-    const mutation = useStorageMutation();
-    const [errors, setErrors] = useState<FormErrors>({});
     const {id} = useLocalSearchParams<{id: string}>();
     const todo = useTodo(id);
+    const loading = useSmartLoading(todo === undefined);
+
+    if (loading.isLoading || !todo) {
+        return loading.showLoader ? <Loader /> : null;
+    }
+
+    return <TodoForm
+        key={todo.id}
+        todo={todo}
+    />;
+}
+
+function TodoForm({todo}: {todo: Todo}) {
+    const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
+    const id = todo.id;
     const navigation = useNavigation();
-    const [name, setName] = useState(todo?.name || '')
-    const [date, setDate] = useState(todo?.date || 0);
+    const [name, setName] = useState(todo.name)
+    const [date, setDate] = useState(todo.date);
     const [t] = useTranslation();
     const router = useRouter();
 
@@ -68,11 +85,6 @@ export default function EditScreen() {
             />
         )})
     }, [mutation.isPending, navigation, save])
-
-    useEffect(() => {
-        setName(todo?.name || '');
-        setDate(todo?.date || 0);
-    }, [todo]);
 
     return (
         <View

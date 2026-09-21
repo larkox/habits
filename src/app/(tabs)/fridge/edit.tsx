@@ -7,10 +7,13 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
+import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
+import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useFood } from '@/store/hooks';
 import { updateFoodFromFridge } from '@/store/storage';
+import type { FridgeFood } from '@/types/model';
 import { normalizeRequiredText } from '@/utils/validation';
 
 type FormErrors = {
@@ -37,13 +40,27 @@ function SaveButton({
     )
 }
 export default function EditScreen() {
-    const mutation = useStorageMutation();
-    const [errors, setErrors] = useState<FormErrors>({});
     const {id} = useLocalSearchParams<{id: string}>();
     const food = useFood(id);
+    const loading = useSmartLoading(food === undefined);
+
+    if (loading.isLoading || !food) {
+        return loading.showLoader ? <Loader /> : null;
+    }
+
+    return <FoodForm
+        key={food.id}
+        food={food}
+    />;
+}
+
+function FoodForm({food}: {food: FridgeFood}) {
+    const mutation = useStorageMutation();
+    const [errors, setErrors] = useState<FormErrors>({});
+    const id = food.id;
     const navigation = useNavigation();
-    const [name, setName] = useState(food?.name || '')
-    const [expiryDate, setExpiryDate] = useState(food?.date || 0);
+    const [name, setName] = useState(food.name)
+    const [expiryDate, setExpiryDate] = useState(food.date);
     const [t] = useTranslation();
     const router = useRouter();
 
@@ -67,11 +84,6 @@ export default function EditScreen() {
             />
         )})
     }, [mutation.isPending, navigation, save])
-
-    useEffect(() => {
-        setName(food?.name || '');
-        setExpiryDate(food?.date || 0);
-    }, [food]);
 
     return (
         <View

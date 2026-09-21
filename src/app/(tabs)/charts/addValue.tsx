@@ -6,7 +6,9 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
+import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
+import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useChartValues } from '@/store/hooks';
 import { setChartValue } from '@/store/storage';
@@ -39,16 +41,35 @@ function SaveButton({
 }
 
 export default function AddChartValue() {
+    const {id: chartId} = useLocalSearchParams<{id: string}>();
+    const values = useChartValues(chartId);
+    const loading = useSmartLoading(values === undefined);
+
+    if (loading.isLoading || !values) {
+        return loading.showLoader ? <Loader /> : null;
+    }
+
+    const todayValue = getChartValueForToday(values);
+    return <ChartValueForm
+        key={`${chartId}:${todayValue?.id ?? 'new'}`}
+        chartId={chartId}
+        initialValue={todayValue?.value}
+    />;
+}
+
+type ChartValueFormProps = {
+    chartId: string;
+    initialValue?: number;
+};
+
+function ChartValueForm({chartId, initialValue}: ChartValueFormProps) {
     const mutation = useStorageMutation();
     const [errors, setErrors] = useState<FormErrors>({});
-    const {id: chartId} = useLocalSearchParams<{id: string}>();
     const navigation = useNavigation();
-    const values = useChartValues(chartId);
-    const todayValue = getChartValueForToday(values);
     const [t] = useTranslation();
     const router = useRouter();
 
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(initialValue?.toString() ?? '');
 
     const save = useCallback(async () => {
         const numberValue = parseLocalizedNumber(value);
@@ -63,23 +84,15 @@ export default function AddChartValue() {
     }, [chartId, mutation, router, t, value]);
 
 
-    // useChartValues return undefined at the beginning so we need
-    // to update the state afterwards.
-    useEffect(() => {
-        if (todayValue) {
-            setValue(todayValue.value.toString())
-        }
-    }, [todayValue]);
-
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => <SaveButton
                 loading={mutation.isPending}
                 onPress={save}
-                isUpdate={Boolean(todayValue)}
+                isUpdate={initialValue !== undefined}
             />,
         })
-    }, [mutation.isPending, navigation, save, todayValue])
+    }, [initialValue, mutation.isPending, navigation, save])
 
     return (
         <View

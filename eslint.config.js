@@ -14,8 +14,6 @@ module.exports = defineConfig([
             '@stylistic/eol-last': ['error', 'always'],
             'curly': ['error', 'all'],
             "no-console": ['error'],
-            // Form screens intentionally hydrate editable local state when storage values arrive.
-            'react-hooks/set-state-in-effect': 'off',
             '@stylistic/indent': ['error'],
             '@stylistic/jsx-indent-props': ['error'],
             'no-restricted-imports': ['error', {

@@ -1,5 +1,7 @@
 import { ActivityIndicator, Pressable, StyleSheet } from "react-native";
 
+import useSmartLoading from '@/hooks/useSmartLoading';
+
 import Text from "./Text";
 import View from "./View";
 
@@ -24,23 +26,23 @@ export default function Button({
     disabled = false,
     loading = false,
 }: ButtonProps) {
-    const isDisabled = disabled || loading;
+    const smartLoading = useSmartLoading(loading);
+    const isDisabled = disabled || smartLoading.isLoading;
     return (
         <Pressable
             onPress={onPress}
             disabled={isDisabled}
             accessibilityRole="button"
-            accessibilityState={{disabled: isDisabled, busy: loading}}
+            accessibilityState={{disabled: isDisabled, busy: smartLoading.isLoading}}
         >
             <View
                 color={isDisabled ? 'disabledButton' : 'button'}
                 border={'button'}
                 style={styles.content}
             >
-                {loading && <ActivityIndicator size="small" />}
+                {smartLoading.showLoader && <ActivityIndicator size="small" />}
                 <Text context={isDisabled ? 'disabledButton' : 'button'}>{text}</Text>
             </View>
         </Pressable>
     )
 }
-

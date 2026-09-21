@@ -6,11 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
+import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
 import HabitCalendar from '@/components/HabitCalendar';
+import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useHabit } from '@/store/hooks';
 import { removeHabit, updateHabit } from '@/store/storage';
+import type { Habit } from '@/types/model';
 import { normalizeRequiredText, parsePositiveInteger } from '@/utils/validation';
 
 type FormErrors = {
@@ -38,13 +41,27 @@ function SaveButton({
     )
 }
 export default function EditScreen() {
-    const mutation = useStorageMutation();
-    const router = useRouter();
     const {id} = useLocalSearchParams<{id: string}>();
     const habit = useHabit(id);
+    const loading = useSmartLoading(habit === undefined);
+
+    if (loading.isLoading || !habit) {
+        return loading.showLoader ? <Loader /> : null;
+    }
+
+    return <HabitForm
+        key={habit.id}
+        habit={habit}
+    />;
+}
+
+function HabitForm({habit}: {habit: Habit}) {
+    const mutation = useStorageMutation();
+    const router = useRouter();
+    const id = habit.id;
     const navigation = useNavigation();
-    const [title, setTitle] = useState(habit?.title || '')
-    const [periodicity, setPeriodicity] = useState(habit?.periodicity.toString() || '');
+    const [title, setTitle] = useState(habit.title)
+    const [periodicity, setPeriodicity] = useState(habit.periodicity.toString());
     const [errors, setErrors] = useState<FormErrors>({});
     const [t] = useTranslation();
 
@@ -73,11 +90,6 @@ export default function EditScreen() {
             />
         )})
     }, [mutation.isPending, navigation, save])
-
-    useEffect(() => {
-        setTitle(habit?.title || '');
-        setPeriodicity(habit?.periodicity.toString() || '');
-    }, [habit]);
 
     const deleteCallback = useCallback(async () => {
         const removed = await mutation.run(() => removeHabit(id));
