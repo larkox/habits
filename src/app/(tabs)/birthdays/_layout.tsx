@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
+import useStackTheme from '@/hooks/useStackTheme';
 
 function AddButton() {
     const router = useRouter();
@@ -23,8 +24,9 @@ function AddButton() {
 
 export default function BirthdaysLayout() {
     const [t] = useTranslation();
+    const screenOptions = useStackTheme();
     return (
-        <Stack>
+        <Stack screenOptions={screenOptions}>
             <Stack.Screen
                 name="index"
                 options={{

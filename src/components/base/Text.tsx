@@ -32,6 +32,9 @@ export default function Text({
             colorName = 'disabledButtonText';
             break;
     }
+    if (type === 'link') {
+        colorName = 'link';
+    }
     const color = useThemeColor(colorName);
 
     return (
@@ -71,6 +74,5 @@ const styles = StyleSheet.create({
     link: {
         lineHeight: 30,
         fontSize: 16,
-        color: '#0a7ea4',
     },
 });

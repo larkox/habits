@@ -4,6 +4,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
+import useStackTheme from '@/hooks/useStackTheme';
 
 function AddChartHeaderButton() {
     const router = useRouter();
@@ -22,8 +23,9 @@ function AddChartHeaderButton() {
 }
 export default function HabitLayout() {
     const [t] = useTranslation();
+    const screenOptions = useStackTheme();
     return (
-        <Stack>
+        <Stack screenOptions={screenOptions}>
             <Stack.Screen
                 name="index"
                 options={{

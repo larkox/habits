@@ -21,7 +21,9 @@ export default function Input({
     type,
     error,
 }: Props) {
-    const placeholderTextColor = useThemeColor('foregroundText');
+    const color = useThemeColor('foregroundText');
+    const placeholderTextColor = useThemeColor('placeholderText');
+    const backgroundColor = useThemeColor('foreground');
     const borderColor = useThemeColor('border');
     return (
         <View>
@@ -31,7 +33,7 @@ export default function Input({
                 value={value}
                 inputMode={type}
                 onChangeText={onChange}
-                style={{borderWidth: 1, borderColor}}
+                style={{borderWidth: 1, borderColor, color, backgroundColor}}
                 placeholderTextColor={placeholderTextColor}
             />
             {error && <Text context='foregroundOverdue'>{error}</Text>}

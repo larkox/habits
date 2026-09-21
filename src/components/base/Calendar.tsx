@@ -27,15 +27,21 @@ export default function Calendar({
     const calendarBackground = useThemeColor('foreground');
     const arrowColor = useThemeColor('button');
     const monthTextColor = useThemeColor('foregroundText');
+    const dayTextColor = useThemeColor('foregroundText');
+    const textDisabledColor = useThemeColor('placeholderText');
+    const todayTextColor = useThemeColor('link');
     const selectedDayBackgroundColor = useThemeColor('foregroundDone');
     const selectedDayTextColor = useThemeColor('foregroundDoneText');
     const theme = useMemo(() => ({
         calendarBackground,
         arrowColor,
         monthTextColor,
+        dayTextColor,
+        textDisabledColor,
+        todayTextColor,
         selectedDayBackgroundColor,
         selectedDayTextColor,
-    }), [arrowColor, calendarBackground, monthTextColor, selectedDayBackgroundColor, selectedDayTextColor]);
+    }), [arrowColor, calendarBackground, dayTextColor, monthTextColor, selectedDayBackgroundColor, selectedDayTextColor, textDisabledColor, todayTextColor]);
 
     const markedDates = useMemo(() => {
         return selectedDates?.reduce<Record<string, {selected: true}>>((dates, date) => {
