@@ -55,7 +55,7 @@ module.exports = defineConfig([
         },
     },
     {
-        files: ['platform/**/*.{js,jsx,ts,tsx}'],
+        files: ['src/platform/**/*.{js,jsx,ts,tsx}'],
         rules: {
             'no-restricted-imports': 'off',
         },
