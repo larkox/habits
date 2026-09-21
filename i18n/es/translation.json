@@ -2,14 +2,125 @@
 	"errors": {
 		"storageTitle": "No se pudieron guardar los cambios",
 		"storageMessage": "Vuelve a intentarlo.",
-		"validationTitle": "Información inválida",
+		"validationTitle": "Información no válida",
 		"validationMessage": "Revisa los valores introducidos y vuelve a intentarlo."
 	},
 	"validation": {
 		"required": "Este campo es obligatorio.",
 		"positiveInteger": "Introduce un número entero mayor que cero.",
-		"number": "Introduce un número válido usando punto o coma decimal.",
-		"birthYear": "Introduce un año válido que no esté en el futuro."
+		"number": "Introduce un número válido usando un punto o una coma como separador decimal.",
+		"birthYear": "Introduce un año válido que no sea posterior al actual."
 	},
-	"habit": "Hábito"
+	"habits": {
+		"title": "Hábitos",
+		"addButton": "Añadir hábito",
+		"addHabit": {
+			"title": "Añadir hábito",
+			"inputLabels": {
+				"title": "Título",
+				"periodicity": "Periodicidad"
+			},
+			"addButton": "Añadir"
+		},
+		"editHabit": {
+			"title": "Editar hábito",
+			"inputLabels": {
+				"periodicity": "Periodicidad",
+				"title": "Título"
+			},
+			"saveButton": "Guardar"
+		},
+		"due": "Toca {{val, relativetime(numeric: auto;)}}",
+		"doButton": "Completar",
+		"doneButton": "Completado",
+		"deleteButton": "Eliminar",
+		"doneToday": "Completado hoy"
+	},
+	"charts": {
+		"title": "Gráficas",
+		"addChart": {
+			"title": "Añadir gráfica",
+			"inputLabels": {
+				"title": "Título",
+				"titlePlaceholder": "Introduce el título de la gráfica"
+			},
+			"addButton": "Añadir"
+		},
+		"addValue": {
+			"title": "Añadir valor",
+			"inputLabels": {
+				"value": "Valor",
+				"valuePlaceholder": "Introduce el valor de hoy"
+			},
+			"addButton": "Añadir",
+			"updateValueButton": "Actualizar"
+		},
+		"addButton": "Añadir gráfica",
+		"addValueButton": "Añadir valor",
+		"updateValueButton": "Actualizar valor",
+		"deleteButton": "Eliminar gráfica"
+	},
+	"fridge": {
+		"addButton": "Añadir alimento",
+		"title": "Nevera",
+		"eatButton": "Consumir",
+		"due": "Caduca {{val, relativetime(numeric: auto;)}}",
+		"addFood": {
+			"title": "Añadir alimento",
+			"addButton": "Añadir",
+			"inputLabels": {
+				"name": "Nombre",
+				"expiryDate": "Fecha de caducidad"
+			}
+		},
+		"editFood": {
+			"title": "Editar alimento",
+			"saveButton": "Guardar"
+		}
+	},
+	"todo": {
+		"addButton": "Añadir tarea",
+		"title": "Tareas",
+		"doButton": "Completar",
+		"due": "Vence {{val, relativetime(numeric: auto;)}}",
+		"addTodo": {
+			"title": "Añadir tarea",
+			"addButton": "Añadir",
+			"inputLabels": {
+				"name": "Nombre",
+				"date": "Fecha límite"
+			}
+		},
+		"editTodo": {
+			"title": "Editar tarea",
+			"saveButton": "Guardar"
+		}
+	},
+	"birthdays": {
+		"addButton": "Añadir cumpleaños",
+		"title": "Cumpleaños",
+		"due": "Es {{val, relativetime(numeric: auto;)}}",
+		"add": {
+			"title": "Añadir cumpleaños",
+			"addButton": "Añadir",
+			"inputLabels": {
+				"name": "Nombre",
+				"year": "Año de nacimiento",
+				"date": "Fecha de nacimiento"
+			}
+		},
+		"edit": {
+			"title": "Editar cumpleaños",
+			"saveButton": "Guardar",
+			"deleteButton": "Eliminar cumpleaños"
+		}
+	},
+	"tabs": {
+		"habits": "Hábitos",
+		"charts": "Gráficas",
+		"fridge": "Nevera",
+		"todo": "Tareas",
+		"birthdays": "Cumpleaños"
+	},
+	"date": "{{val, datetime}}"
 }
