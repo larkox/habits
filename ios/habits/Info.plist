@@ -49,8 +49,8 @@
     <array>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
     </array>
-    <key>RCTNewArchEnabled</key>
-    <true/>
+    <key>RCTMetroPort</key>
+    <string>$(RCT_METRO_PORT)</string>
     <key>UIAppFonts</key>
     <array>
       <string>SpaceMono-Regular.ttf</string>

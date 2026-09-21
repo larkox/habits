@@ -10,7 +10,7 @@ export type ThemeColors = keyof typeof Colors.light & keyof typeof Colors.dark |
 export function useThemeColor(
     colorName: ThemeColors,
 ) {
-    const theme = useColorScheme() ?? 'light';
+    const theme = useColorScheme() === 'dark' ? 'dark' : 'light';
 
     if (colorName === 'transparent') {
         return undefined;

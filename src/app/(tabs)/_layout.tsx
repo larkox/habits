@@ -25,7 +25,7 @@ function badgeOptions(badge: ReminderBadge | undefined, colors: typeof Colors.li
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const colors = Colors[colorScheme ?? 'light'];
+    const colors = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
     const [t] = useTranslation();
     const today = useCurrentDay();
     const todos = useTodos();

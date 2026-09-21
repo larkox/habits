@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "habits",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.habits"
@@ -17,7 +16,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundImage": "./assets/images/adaptive-icon-background.png"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.anonymous.habits"
     },
     "web": {
@@ -41,9 +39,12 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/SpaceMono-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/SpaceMono-Regular.ttf"
+          ]
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true
