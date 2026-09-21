@@ -115,12 +115,43 @@
 			"deleteButton": "Eliminar cumpleaños"
 		}
 	},
+	"data": {
+		"title": "Datos",
+		"export": {
+			"title": "Exportar",
+			"description": "Crea una copia de seguridad en formato JSON para guardarla o compartirla.",
+			"elementsButton": "Exportar solo los elementos",
+			"historyButton": "Exportar elementos e historial",
+			"shareTitle": "Exportar los datos de Hábitos"
+		},
+		"import": {
+			"title": "Importar",
+			"description": "Añadir crea copias con identificadores nuevos. Reemplazar elimina todos los datos actuales antes de restaurar la copia.",
+			"appendButton": "Añadir desde una copia",
+			"replaceButton": "Reemplazar desde una copia",
+			"replaceConfirmTitle": "¿Reemplazar todos los datos?",
+			"replaceConfirmMessage": "Se eliminarán todos los hábitos, tareas, alimentos, cumpleaños, gráficas e historiales actuales.",
+			"replaceConfirmButton": "Reemplazar",
+			"cancelButton": "Cancelar",
+			"successTitle": "Importación completada",
+			"successMessage": "La copia de seguridad se ha importado correctamente."
+		},
+		"errors": {
+			"exportTitle": "No se pudieron exportar los datos",
+			"exportMessage": "Vuelve a intentarlo.",
+			"importTitle": "No se pudieron importar los datos",
+			"importMessage": "No se ha realizado ningún cambio. Vuelve a intentarlo.",
+			"invalidTitle": "Copia de seguridad no válida",
+			"invalidMessage": "Selecciona un archivo de copia de seguridad válido."
+		}
+	},
 	"tabs": {
 		"habits": "Hábitos",
 		"charts": "Gráficas",
 		"fridge": "Nevera",
 		"todo": "Tareas",
-		"birthdays": "Cumpleaños"
+		"birthdays": "Cumpleaños",
+		"data": "Datos"
 	},
 	"date": "{{val, datetime}}"
 }

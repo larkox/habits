@@ -109,6 +109,18 @@ export default function TabLayout() {
                     title: t('tabs.charts')
                 }}
             />
+            <Tabs.Screen
+                name="data"
+                options={{
+                    tabBarIcon: ({color}) => <IconSymbol
+                        size={28}
+                        name="arrow.up.arrow.down.square.fill"
+                        color={color}
+                    />,
+                    headerShown: false,
+                    title: t('tabs.data')
+                }}
+            />
         </Tabs>
     );
 }

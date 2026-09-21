@@ -16,6 +16,13 @@ module.exports = defineConfig([
             "no-console": ['error'],
             '@stylistic/indent': ['error'],
             '@stylistic/jsx-indent-props': ['error'],
+            'no-restricted-imports': ['error', {
+                paths: [
+                    {name: 'expo-document-picker', message: 'Use @/platform/jsonFiles instead.'},
+                    {name: 'expo-file-system', message: 'Use a platform adapter instead.'},
+                    {name: 'expo-sharing', message: 'Use @/platform/jsonFiles instead.'},
+                ],
+            }],
             'import/order': ['error', {
                 groups: [['builtin', 'external'], 'internal', ['parent', 'sibling', 'index']],
                 pathGroups: [
@@ -45,6 +52,12 @@ module.exports = defineConfig([
             'react/jsx-first-prop-new-line': ['error', 'multiline-multiprop'],
             'react/jsx-max-props-per-line': ['error', { maximum: 1, when: 'always' }],
             'react/jsx-one-expression-per-line': ['error', { allow: 'single-child' }],
-        }
+        },
+    },
+    {
+        files: ['platform/**/*.{js,jsx,ts,tsx}'],
+        rules: {
+            'no-restricted-imports': 'off',
+        },
     },
 ]);

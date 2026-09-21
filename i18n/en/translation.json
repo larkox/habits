@@ -115,12 +115,43 @@
 			"deleteButton": "Delete birthday"
 		}
 	},
+	"data": {
+		"title": "Data",
+		"export": {
+			"title": "Export",
+			"description": "Create a JSON backup to save or share.",
+			"elementsButton": "Export items only",
+			"historyButton": "Export items and history",
+			"shareTitle": "Export habits data"
+		},
+		"import": {
+			"title": "Import",
+			"description": "Append creates copies with new IDs. Replace removes all current data before restoring the backup.",
+			"appendButton": "Append from backup",
+			"replaceButton": "Replace from backup",
+			"replaceConfirmTitle": "Replace all data?",
+			"replaceConfirmMessage": "All current habits, tasks, food, birthdays, charts, and history will be removed.",
+			"replaceConfirmButton": "Replace",
+			"cancelButton": "Cancel",
+			"successTitle": "Import complete",
+			"successMessage": "The backup was imported successfully."
+		},
+		"errors": {
+			"exportTitle": "Could not export data",
+			"exportMessage": "Please try again.",
+			"importTitle": "Could not import data",
+			"importMessage": "No changes were made. Please try again.",
+			"invalidTitle": "Invalid backup",
+			"invalidMessage": "Choose a valid habits backup file."
+		}
+	},
 	"tabs": {
 		"habits": "Habits",
 		"charts": "Charts",
 		"fridge": "Fridge",
 		"todo": "Todo",
-		"birthdays": "Birthdays"
+		"birthdays": "Birthdays",
+		"data": "Data"
 	},
 	"date": "{{val, datetime}}"
 }

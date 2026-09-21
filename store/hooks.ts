@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DeviceEventEmitter, EmitterSubscription } from "react-native";
 
-import { EVENT_STORAGE_ADD_BIRTHDAY, EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_FRIDGE_FOOD, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_ADD_TODO, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_REMOVE_BIRTHDAY, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_REMOVE_FRIDGE_FOOD, EVENT_STORAGE_REMOVE_TODO, EVENT_STORAGE_UPDATE_BIRTHDAY, EVENT_STORAGE_UPDATE_FRIDGE_FOOD, EVENT_STORAGE_UPDATE_HABIT, EVENT_STORAGE_UPDATE_TODO } from "./constants";
+import { EVENT_STORAGE_ADD_BIRTHDAY, EVENT_STORAGE_ADD_CHART, EVENT_STORAGE_ADD_CHART_VALUE, EVENT_STORAGE_ADD_FRIDGE_FOOD, EVENT_STORAGE_ADD_HABIT, EVENT_STORAGE_ADD_TODO, EVENT_STORAGE_DELETE_HABIT, EVENT_STORAGE_IMPORT, EVENT_STORAGE_REMOVE_BIRTHDAY, EVENT_STORAGE_REMOVE_CHART, EVENT_STORAGE_REMOVE_FRIDGE_FOOD, EVENT_STORAGE_REMOVE_TODO, EVENT_STORAGE_UPDATE_BIRTHDAY, EVENT_STORAGE_UPDATE_FRIDGE_FOOD, EVENT_STORAGE_UPDATE_HABIT, EVENT_STORAGE_UPDATE_TODO } from "./constants";
 import { getAllBirthdays, getAllChartIDs, getAllFridgeFood, getAllHabits, getAllTodos, getBirthday, getChart, getChartValues, getFridgeFood, getHabit, getHabitCalendar, getTodo } from "./storage";
 
 function useGenericHook<T>(events: string[], getValue: () => Promise<T|undefined>) {
@@ -12,7 +12,7 @@ function useGenericHook<T>(events: string[], getValue: () => Promise<T|undefined
             setValue(updatedValue);
         }
         const listeners: EmitterSubscription[] = [];
-        for (const event of events) {
+        for (const event of new Set([...events, EVENT_STORAGE_IMPORT])) {
             listeners.push(DeviceEventEmitter.addListener(event, callback));
         }
         return () => {
@@ -36,15 +36,15 @@ function useGenericHook<T>(events: string[], getValue: () => Promise<T|undefined
 function useGenericHookWithId<T>(id: string, events: string[], getValue: (id: string) => Promise<T|undefined>) {
     const [value, setValue] = useState<T|undefined>(undefined);
     useEffect(() => {
-        async function callback(updatedId: string) {
-            if (updatedId !== id) {
+        async function callback(updatedId?: string) {
+            if (updatedId !== undefined && updatedId !== id) {
                 return;
             }
             const updatedValue = await getValue(id);
             setValue(updatedValue);
         }
         const listeners: EmitterSubscription[] = [];
-        for (const event of events) {
+        for (const event of new Set([...events, EVENT_STORAGE_IMPORT])) {
             listeners.push(DeviceEventEmitter.addListener(event, callback));
         }
         return () => {

@@ -13,3 +13,4 @@ export const EVENT_STORAGE_UPDATE_TODO = 'event_storage_update_todo';
 export const EVENT_STORAGE_ADD_BIRTHDAY = 'event_storage_add_birthday';
 export const EVENT_STORAGE_REMOVE_BIRTHDAY = 'event_storage_remove_birthday';
 export const EVENT_STORAGE_UPDATE_BIRTHDAY = 'event_storage_update_birthday';
+export const EVENT_STORAGE_IMPORT = 'event_storage_import';
