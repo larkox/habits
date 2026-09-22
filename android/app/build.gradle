@@ -107,9 +107,9 @@ android {
         release {
             if (project.hasProperty('HABITS_RELEASE_STORE_FILE')) {
                 storeFile file(HABITS_RELEASE_STORE_FILE)
-                storePassword HABITS_RELEASE_PASSWORD
+                storePassword HABITS_RELEASE_STORE_PASSWORD
                 keyAlias HABITS_RELEASE_KEY_ALIAS
-                keyPassword HABITS_RELEASE_PASSWORD
+                keyPassword HABITS_RELEASE_KEY_PASSWORD
             }
         }
     }
