@@ -58,6 +58,7 @@ export default function Todo({
             disabled={mutation.isPending}
         >
             <View
+                testID="todo-card"
                 color={viewColor}
                 border={'view'}
                 style={{flexDirection: 'row', alignItems: 'center'}}

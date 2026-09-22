@@ -51,6 +51,7 @@ export default function Birthday({
             onLongPress={longPressCallback}
         >
             <View
+                testID="birthday-card"
                 color={viewColor}
                 border={'view'}
                 style={{flexDirection: 'row', alignItems: 'center'}}

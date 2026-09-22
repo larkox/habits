@@ -7,6 +7,7 @@ export type ViewProps = {
     color?: ThemeColors;
     style?: StyleProp<ViewStyle>;
     border?: 'button' | 'view';
+    testID?: string;
     children?: ComponentProps<typeof RNView>['children'];
 }
 
@@ -15,6 +16,7 @@ export default function View({
     style,
     children,
     border,
+    testID,
 }: ViewProps) {
     const backgroundColor = useThemeColor(color);
     const borderColor = useThemeColor('buttonBorder');
@@ -28,7 +30,12 @@ export default function View({
         ];
     }, [backgroundColor, borderColor, border, style]);
 
-    return <RNView style={baseStyle}>{children}</RNView>;
+    return <RNView
+        style={baseStyle}
+        testID={testID}
+    >
+        {children}
+    </RNView>;
 }
 
 const styles = StyleSheet.create({

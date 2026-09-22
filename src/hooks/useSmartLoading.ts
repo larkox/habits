@@ -5,7 +5,7 @@ const MINIMUM_VISIBLE_MS = 1000;
 
 export default function useSmartLoading(loading: boolean) {
     const [showLoader, setShowLoader] = useState(false);
-    const shownAt = useRef<number | undefined>(undefined);
+    const shownAt = useRef(0);
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | undefined;
@@ -18,10 +18,10 @@ export default function useSmartLoading(loading: boolean) {
                 }, SHOW_DELAY_MS);
             }
         } else if (showLoader) {
-            const visibleFor = Date.now() - (shownAt.current ?? Date.now());
+            const visibleFor = Date.now() - shownAt.current;
             const remaining = Math.max(0, MINIMUM_VISIBLE_MS - visibleFor);
             timer = setTimeout(() => {
-                shownAt.current = undefined;
+                shownAt.current = 0;
                 setShowLoader(false);
             }, remaining);
         }

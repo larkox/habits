@@ -10,6 +10,7 @@ export default function Loader() {
     return (
         <View style={styles.container}>
             <ActivityIndicator
+                accessibilityLabel="loading"
                 color={color}
                 size="large"
             />

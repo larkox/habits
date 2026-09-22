@@ -40,7 +40,10 @@ export default function Button({
                 border={'button'}
                 style={styles.content}
             >
-                {smartLoading.showLoader && <ActivityIndicator size="small" />}
+                {smartLoading.showLoader && <ActivityIndicator
+                    accessibilityLabel="loading"
+                    size="small"
+                />}
                 <Text context={isDisabled ? 'disabledButton' : 'button'}>{text}</Text>
             </View>
         </Pressable>

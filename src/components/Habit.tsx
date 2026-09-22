@@ -66,6 +66,7 @@ export default function Habit({
             disabled={mutation.isPending}
         >
             <View
+                testID="habit-card"
                 color={viewColor}
                 border={'view'}
                 style={{flexDirection: 'row', alignItems: 'center'}}
