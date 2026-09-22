@@ -61,7 +61,7 @@ describe('TodoElement', () => {
 
         await fireEvent(screen.getByText('Call'), 'onLongPress');
 
-        expect(navigate).toHaveBeenCalledWith('/(tabs)/todo/edit?id=todo');
+        expect(navigate).toHaveBeenCalledWith('/(details)/todo/edit?id=todo');
         expect(removeTodo).not.toHaveBeenCalled();
     });
 });

@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
-import AddHabit from '@/app/(tabs)/habits/add';
+import AddHabit from '@/app/(details)/habits/add';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { addHabit } from '@/store/storage';
 

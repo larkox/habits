@@ -11,7 +11,7 @@ function AddButton() {
     const [t] = useTranslation();
 
     const goToAddScreen = useCallback(() => {
-        router.navigate('/(tabs)/todo/add')
+        router.navigate('/(details)/todo/add')
     }, [router])
     
     return (
@@ -33,20 +33,6 @@ export default function TodoLayout() {
                     title: t('todo.title'),
                     headerShown: true,
                     headerRight: AddButton,
-                }}
-            />
-            <Stack.Screen
-                name="add"
-                options={{
-                    title: t('todo.addTodo.title'),
-                    headerShown: true,
-                }}
-            />
-            <Stack.Screen
-                name="edit"
-                options={{
-                    title: t('todo.editTodo.title'),
-                    headerShown: true,
                 }}
             />
         </Stack>

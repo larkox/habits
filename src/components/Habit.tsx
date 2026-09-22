@@ -31,7 +31,7 @@ export default function Habit({
     }, [id, mutation]);
 
     const longPressCallback = useCallback(() => {
-        router.navigate(`/(tabs)/habits/edit?id=${id}`);
+        router.navigate(`/(details)/habits/edit?id=${id}`);
     }, [id, router])
 
     if (!habit) {

@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
-import AddChart from '@/app/(tabs)/charts/addChart';
+import AddChart from '@/app/(details)/charts/addChart';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { addChart } from '@/store/storage';
 

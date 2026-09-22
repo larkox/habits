@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
-import AddBirthday from '@/app/(tabs)/birthdays/add';
+import AddBirthday from '@/app/(details)/birthdays/add';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { addBirthday } from '@/store/storage';
 import { getStartOfDay, getMonthAndDay } from '@/utils/time';

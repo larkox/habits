@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
-import AddFridge from '@/app/(tabs)/fridge/add';
+import AddFridge from '@/app/(details)/fridge/add';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { addFridgeFood } from '@/store/storage';
 import { getStartOfDay } from '@/utils/time';

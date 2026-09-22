@@ -31,7 +31,7 @@ export default function Todo({
     }, [id, mutation]);
 
     const longPressCallback = useCallback(() => {
-        router.navigate(`/(tabs)/todo/edit?id=${id}`);
+        router.navigate(`/(details)/todo/edit?id=${id}`);
     }, [id, router])
 
     if (!todo) {

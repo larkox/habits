@@ -34,7 +34,7 @@ export default function Chart({
     }, [values, t]);
 
     const doCallback = useCallback(() => {
-        router.navigate(`/(tabs)/charts/addValue?id=${id}`)
+        router.navigate(`/(details)/charts/addValue?id=${id}`)
     }, [id, router]);
 
     const deleteCallback = useCallback(() => {

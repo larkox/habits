@@ -69,7 +69,7 @@ describe('Food', () => {
 
         await fireEvent(screen.getByText('Milk'), 'onLongPress');
 
-        expect(navigate).toHaveBeenCalledWith('/(tabs)/fridge/edit?id=food');
+        expect(navigate).toHaveBeenCalledWith('/(details)/fridge/edit?id=food');
         expect(removeFoodFromFridge).not.toHaveBeenCalled();
     });
 });

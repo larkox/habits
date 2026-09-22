@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
+import FormScreen from '@/components/base/FormScreen';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
 import Loader from '@/components/base/Loader';
-import View from '@/components/base/View';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useTodo } from '@/store/hooks';
@@ -87,9 +86,7 @@ function TodoForm({todo}: {todo: Todo}) {
     }, [mutation.isPending, navigation, save])
 
     return (
-        <View
-            style={styles.container}
-        >
+        <FormScreen>
             <Input
                 label={t('todo.addTodo.inputLabels.name')}
                 onChange={setName}
@@ -102,16 +99,7 @@ function TodoForm({todo}: {todo: Todo}) {
                 setValue={setDate}
                 value={date}
             />
-        </View>
+        </FormScreen>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        gap: 8,
-    },
-    deletecontainer: {
-        marginTop: 'auto',
-    }
-});

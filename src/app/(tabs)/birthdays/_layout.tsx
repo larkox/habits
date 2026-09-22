@@ -11,7 +11,7 @@ function AddButton() {
     const [t] = useTranslation();
 
     const goToAddScreen = useCallback(() => {
-        router.navigate('/(tabs)/birthdays/add')
+        router.navigate('/(details)/birthdays/add')
     }, [router])
     
     return (
@@ -33,20 +33,6 @@ export default function BirthdaysLayout() {
                     title: t('birthdays.title'),
                     headerShown: true,
                     headerRight: AddButton,
-                }}
-            />
-            <Stack.Screen
-                name="add"
-                options={{
-                    title: t('birthdays.add.title'),
-                    headerShown: true,
-                }}
-            />
-            <Stack.Screen
-                name="edit"
-                options={{
-                    title: t('birthdays.edit.title'),
-                    headerShown: true,
                 }}
             />
         </Stack>

@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useNavigation, useRouter } from 'expo-router';
 
-import AddTodo from '@/app/(tabs)/todo/add';
+import AddTodo from '@/app/(details)/todo/add';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { addTodo } from '@/store/storage';
 import { getStartOfDay } from '@/utils/time';

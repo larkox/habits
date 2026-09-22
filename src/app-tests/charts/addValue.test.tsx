@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
-import AddChartValue from '@/app/(tabs)/charts/addValue';
+import AddChartValue from '@/app/(details)/charts/addValue';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { useChartValues } from '@/store/hooks';

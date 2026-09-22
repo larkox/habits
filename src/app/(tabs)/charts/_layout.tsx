@@ -11,7 +11,7 @@ function AddChartHeaderButton() {
     const [t] = useTranslation();
         
     const goToAddScreen = useCallback(() => {
-        router.navigate('/(tabs)/charts/addChart')
+        router.navigate('/(details)/charts/addChart')
     }, [router])
 
     return (
@@ -32,20 +32,6 @@ export default function HabitLayout() {
                     title: t('charts.title'),
                     headerShown: true,
                     headerRight: AddChartHeaderButton,
-                }}
-            />
-            <Stack.Screen
-                name="addChart"
-                options={{
-                    title: t('charts.addChart.title'),
-                    headerShown: true,
-                }}
-            />
-            <Stack.Screen
-                name="addValue"
-                options={{
-                    title: t('charts.addValue.title'),
-                    headerShown: true,
                 }}
             />
         </Stack>

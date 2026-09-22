@@ -61,7 +61,7 @@ describe('Chart', () => {
         expect(screen.getByText('Weight')).toBeTruthy();
         expect(screen.getByTestId('line-chart').props.data).toEqual([{value: 72, label: 'date:100'}]);
         expect(getChartValueForToday).toHaveBeenCalledWith(values);
-        expect(navigate).toHaveBeenCalledWith('/(tabs)/charts/addValue?id=chart');
+        expect(navigate).toHaveBeenCalledWith('/(details)/charts/addValue?id=chart');
         expect(removeChart).not.toHaveBeenCalled();
     });
 

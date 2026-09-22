@@ -11,7 +11,7 @@ function AddButton() {
     const [t] = useTranslation();
 
     const goToAddScreen = useCallback(() => {
-        router.navigate('/(tabs)/habits/add')
+        router.navigate('/(details)/habits/add')
     }, [router])
     
     return (
@@ -33,20 +33,6 @@ export default function HabitLayout() {
                     title: t('habits.title'),
                     headerShown: true,
                     headerRight: AddButton,
-                }}
-            />
-            <Stack.Screen
-                name="add"
-                options={{
-                    title: t('habits.addHabit.title'),
-                    headerShown: true,
-                }}
-            />
-            <Stack.Screen
-                name="edit"
-                options={{
-                    title: t('habits.editHabit.title'),
-                    headerShown: true,
                 }}
             />
         </Stack>

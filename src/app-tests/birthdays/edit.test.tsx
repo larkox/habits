@@ -1,7 +1,7 @@
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 
-import EditBirthday from '@/app/(tabs)/birthdays/edit';
+import EditBirthday from '@/app/(details)/birthdays/edit';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { useBirthday } from '@/store/hooks';
@@ -22,6 +22,10 @@ jest.mock('@/components/base/Input', () => (props: object & {label: string}) => 
 jest.mock('@/components/base/InputCalendar', () => (props: object & {label: string}) => {
     const {createElement} = jest.requireActual<typeof import('react')>('react');
     return createElement('InputCalendar', {...props, testID: props.label});
+});
+jest.mock('@/components/base/FormScreen', () => (props: object & {children: React.ReactNode}) => {
+    const {createElement} = jest.requireActual<typeof import('react')>('react');
+    return createElement('FormScreen', props);
 });
 jest.mock('@/components/base/Loader', () => () => {
     const {createElement} = jest.requireActual<typeof import('react')>('react');

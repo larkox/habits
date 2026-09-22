@@ -23,7 +23,7 @@ export default function Birthday({
     const router = useRouter();
 
     const longPressCallback = useCallback(() => {
-        router.navigate(`/(tabs)/birthdays/edit?id=${id}`);
+        router.navigate(`/(details)/birthdays/edit?id=${id}`);
     }, [id, router])
 
     if (!birthdate) {

@@ -5,6 +5,7 @@ import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
+import FormScreen from '@/components/base/FormScreen';
 import Input from '@/components/base/Input';
 import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
@@ -98,9 +99,7 @@ function HabitForm({habit}: {habit: Habit}) {
         }
     }, [mutation, router, id])
     return (
-        <View
-            style={styles.container}
-        >
+        <FormScreen>
             <Input
                 label={t('habits.editHabit.inputLabels.title')}
                 onChange={setTitle}
@@ -123,15 +122,11 @@ function HabitForm({habit}: {habit: Habit}) {
                     loading={mutation.isPending}
                 />
             </View>
-        </View>
+        </FormScreen>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        gap: 8,
-    },
     deletecontainer: {
         marginTop: 'auto',
     }

@@ -11,7 +11,7 @@ function AddButton() {
     const [t] = useTranslation();
 
     const goToAddScreen = useCallback(() => {
-        router.navigate('/(tabs)/fridge/add')
+        router.navigate('/(details)/fridge/add')
     }, [router])
     
     return (
@@ -33,20 +33,6 @@ export default function FridgeLayout() {
                     title: t('fridge.title'),
                     headerShown: true,
                     headerRight: AddButton,
-                }}
-            />
-            <Stack.Screen
-                name="add"
-                options={{
-                    title: t('fridge.addFood.title'),
-                    headerShown: true,
-                }}
-            />
-            <Stack.Screen
-                name="edit"
-                options={{
-                    title: t('fridge.editFood.title'),
-                    headerShown: true,
                 }}
             />
         </Stack>

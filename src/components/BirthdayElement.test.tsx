@@ -57,6 +57,6 @@ describe('BirthdayElement', () => {
         const screen = await render(<BirthdayElement id="birthday"/>);
         await fireEvent(screen.getByText('Ada'), 'onLongPress');
         expect(screen.getByText('26')).toBeTruthy();
-        expect(navigate).toHaveBeenCalledWith('/(tabs)/birthdays/edit?id=birthday');
+        expect(navigate).toHaveBeenCalledWith('/(details)/birthdays/edit?id=birthday');
     });
 });

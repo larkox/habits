@@ -74,7 +74,7 @@ describe('Habit', () => {
 
         await fireEvent(screen.getByText('Read'), 'onLongPress');
 
-        expect(navigate).toHaveBeenCalledWith('/(tabs)/habits/edit?id=habit');
+        expect(navigate).toHaveBeenCalledWith('/(details)/habits/edit?id=habit');
         expect(doHabit).not.toHaveBeenCalled();
     });
 
