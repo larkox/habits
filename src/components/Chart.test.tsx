@@ -10,8 +10,8 @@ import { getChartValueForToday } from '@/utils/charts';
 import Chart from './Chart';
 
 jest.mock('expo-router', () => ({useRouter: jest.fn()}));
-jest.mock('react-i18next', () => ({
-    useTranslation: () => [(key: string, options?: {val?: number}) => options?.val === undefined ? key : `${key}:${options.val}`],
+jest.mock('@/platform/translations', () => ({
+    useTranslate: () => (key: string, options?: {val?: number}) => options?.val === undefined ? key : `${key}:${options.val}`,
 }));
 jest.mock('react-native-gifted-charts', () => ({
     LineChart: (props: object) => {

@@ -4,7 +4,11 @@ import { Calendar as NativeCalendar } from "react-native-calendars";
 import type { DateData } from "react-native-calendars";
 
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { useSystemCalendarSettings } from '@/platform/localization';
+import { useTranslationLanguage } from '@/platform/translations';
 import type { CalendarDate } from "@/types/calendar";
+
+import { setCalendarLanguage } from './calendarLocales';
 
 export type CalendarProps = {
     /** Local calendar date in YYYY-MM-DD format. */
@@ -24,6 +28,10 @@ export default function Calendar({
     onDayPress,
     onMonthChange,
 }: CalendarProps) {
+    const language = useTranslationLanguage();
+    const { firstDayOfWeek } = useSystemCalendarSettings();
+    setCalendarLanguage(language);
+
     const calendarBackground = useThemeColor('foreground');
     const arrowColor = useThemeColor('button');
     const monthTextColor = useThemeColor('foregroundText');
@@ -62,6 +70,8 @@ export default function Calendar({
 
     return (
         <NativeCalendar
+            key={language}
+            firstDay={firstDayOfWeek}
             initialDate={initialDate}
             markedDates={markedDates}
             disableAllTouchEvents={readOnly}

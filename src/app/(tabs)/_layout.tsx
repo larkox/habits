@@ -2,12 +2,13 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { Tabs } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import useCurrentDay from '@/hooks/useCurrentDay';
+import { useTranslate } from "@/platform/translations";
 import { useBirthdays, useFridgeFood, useTodos } from '@/store/hooks';
 import { getBirthdayBadge, getFridgeBadge, getTodoBadge, ReminderBadge } from '@/utils/badges';
 
@@ -26,7 +27,7 @@ function badgeOptions(badge: ReminderBadge | undefined, colors: typeof Colors.li
 export default function TabLayout() {
     const colorScheme = useColorScheme();
     const colors = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
-    const [t] = useTranslation();
+    const t = useTranslate();
     const today = useCurrentDay();
     const todos = useTodos();
     const birthdays = useBirthdays();

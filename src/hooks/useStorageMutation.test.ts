@@ -6,8 +6,8 @@ import type { Result } from '@/types/result';
 
 import useStorageMutation from './useStorageMutation';
 
-jest.mock('react-i18next', () => ({
-    useTranslation: () => [(key: string) => key],
+jest.mock('@/platform/translations', () => ({
+    useTranslate: () => (key: string) => key,
 }));
 
 function deferredResult() {

@@ -1,15 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Alert } from "react-native";
 
-import { useTranslation } from "react-i18next";
-
+import { useTranslate } from "@/platform/translations";
 import type { Result } from "@/types/result";
 
 export default function useStorageMutation() {
     const [isPending, setIsPending] = useState(false);
     const inFlight = useRef(false);
     const mounted = useRef(true);
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     useEffect(() => {
         mounted.current = true;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import FormScreen from '@/components/base/FormScreen';
@@ -10,6 +10,7 @@ import InputCalendar from '@/components/base/InputCalendar';
 import Loader from '@/components/base/Loader';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { useTodo } from '@/store/hooks';
 import { updateTodo } from '@/store/storage';
 import type { Todo } from '@/types/model';
@@ -28,7 +29,7 @@ function SaveButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     return (
         <Button
@@ -61,7 +62,7 @@ function TodoForm({todo}: {todo: Todo}) {
     const navigation = useNavigation();
     const [name, setName] = useState(todo.name)
     const [date, setDate] = useState(todo.date);
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const save = useCallback(async () => {

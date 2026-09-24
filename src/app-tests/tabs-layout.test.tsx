@@ -14,7 +14,7 @@ jest.mock('expo-router', () => {
         {Screen: (props: object & {name: string}) => createElement('TabsScreen', {...props, testID: props.name})},
     )};
 });
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string) => key]}));
+jest.mock("@/platform/translations", () => ({useTranslate: () => (key: string) => key}));
 jest.mock('@/hooks/useColorScheme', () => ({useColorScheme: jest.fn()}));
 jest.mock('@/hooks/useCurrentDay', () => jest.fn());
 jest.mock('@/store/hooks', () => ({useBirthdays: jest.fn(), useFridgeFood: jest.fn(), useTodos: jest.fn()}));

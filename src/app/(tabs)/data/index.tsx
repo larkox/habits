@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet } from 'react-native';
 
-import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/base/Button';
 import Text from '@/components/base/Text';
 import View from '@/components/base/View';
 import { pickJsonFile, shareJsonFile } from '@/platform/jsonFiles';
+import { useTranslate } from "@/platform/translations";
 import { createBackup, importBackup, parseBackupFile } from '@/store/backup';
 import type { ExportScope, ImportMode } from '@/types/backup';
 
@@ -14,7 +14,7 @@ const MAX_BACKUP_BYTES = 10 * 1024 * 1024;
 
 export default function DataScreen() {
     const [pendingAction, setPendingAction] = useState<string>();
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const exportData = useCallback(async (scope: ExportScope) => {
         setPendingAction(`export-${scope}`);

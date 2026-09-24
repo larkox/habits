@@ -7,7 +7,7 @@ import { addChart } from '@/store/storage';
 
 
 jest.mock('expo-router', () => ({useNavigation: jest.fn(), useRouter: jest.fn()}));
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string) => key]}));
+jest.mock("@/platform/translations", () => ({useTranslate: () => (key: string) => key}));
 jest.mock('@/hooks/useStorageMutation', () => jest.fn());
 jest.mock('@/store/storage', () => ({addChart: jest.fn()}));
 jest.mock('@/components/base/Input', () => (props: object & {label: string}) => {

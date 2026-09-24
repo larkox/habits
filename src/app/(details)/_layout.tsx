@@ -1,10 +1,11 @@
 import { Stack } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 
 import useStackTheme from '@/hooks/useStackTheme';
+import { useTranslate } from "@/platform/translations";
+
 
 export default function DetailsLayout() {
-    const [t] = useTranslation();
+    const t = useTranslate();
     const screenOptions = useStackTheme();
 
     return (

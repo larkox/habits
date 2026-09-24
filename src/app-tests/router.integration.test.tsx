@@ -18,8 +18,11 @@ import TodoElement from '@/components/TodoElement';
 import useStorageMutation from '@/hooks/useStorageMutation';
 import { useTodo } from '@/store/hooks';
 
-jest.mock('@/i18n/i18n', () => ({}));
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string) => key]}));
+jest.mock('@/i18n/useSystemLanguage', () => jest.fn());
+jest.mock('@/platform/translations', () => ({
+    useTranslate: () => (key: string) => key,
+    useTranslationLanguage: () => 'en',
+}));
 jest.mock('@/hooks/useStorageMutation', () => jest.fn());
 jest.mock('@/store/hooks', () => ({
     useTodo: jest.fn(),

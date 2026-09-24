@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react-native';
+import { LocaleConfig } from 'react-native-calendars';
 
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { useSystemCalendarSettings } from '@/platform/localization';
+import { useTranslationLanguage } from '@/platform/translations';
 
 import Calendar from './Calendar';
 
@@ -9,12 +12,20 @@ jest.mock('react-native-calendars', () => ({
         const {createElement} = jest.requireActual<typeof import('react')>('react');
         return createElement('NativeCalendar', {...props, testID: 'native-calendar'});
     },
+    LocaleConfig: {
+        defaultLocale: 'en',
+        locales: {},
+    },
 }));
 jest.mock('@/hooks/useThemeColor', () => ({useThemeColor: jest.fn()}));
+jest.mock('@/platform/localization', () => ({useSystemCalendarSettings: jest.fn()}));
+jest.mock('@/platform/translations', () => ({useTranslationLanguage: jest.fn()}));
 const mockedThemeColor = jest.mocked(useThemeColor);
 beforeEach(() => {
     jest.clearAllMocks();
     mockedThemeColor.mockImplementation(color => `color-${color}`);
+    jest.mocked(useSystemCalendarSettings).mockReturnValue({firstDayOfWeek: 1});
+    jest.mocked(useTranslationLanguage).mockReturnValue('en');
 });
 
 describe('Calendar', () => {
@@ -37,8 +48,19 @@ describe('Calendar', () => {
             '2026-09-21': {selected: true},
         });
         expect(calendar.props.theme.calendarBackground).toBe('color-foreground');
+        expect(calendar.props.firstDay).toBe(1);
+        expect(LocaleConfig.defaultLocale).toBe('en');
         expect(onDayPress).toHaveBeenCalledWith({year: 2026, month: 9, day: 21});
         expect(onMonthChange).toHaveBeenCalledWith({year: 2026, month: 10, day: 1});
+    });
+
+    test('uses Spanish calendar labels with the Spanish app language', async () => {
+        jest.mocked(useTranslationLanguage).mockReturnValue('es');
+
+        await render(<Calendar/>);
+
+        expect(LocaleConfig.defaultLocale).toBe('es');
+        expect(LocaleConfig.locales.es.monthNames[0]).toBe('enero');
     });
 
     test('does not select days in read-only mode', async () => {

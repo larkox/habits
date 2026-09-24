@@ -2,13 +2,14 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import InputCalendar from '@/components/base/InputCalendar';
 import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { addBirthday } from '@/store/storage';
 import { getMonthAndDay, getStartOfDay } from '@/utils/time';
 import { normalizeRequiredText, parseBirthYear } from '@/utils/validation';
@@ -27,7 +28,7 @@ function SaveButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     return (
         <Button
@@ -45,7 +46,7 @@ export default function AddScreen() {
     const [name, setName] = useState('')
     const [date, setDate] = useState<number>(() => getStartOfDay());
     const [yearString, setYearString] = useState('');
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const save = useCallback(async () => {

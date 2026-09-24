@@ -2,10 +2,10 @@ import { useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 import { LineChart } from "react-native-gifted-charts";
 
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { useChart, useChartValues } from "@/store/hooks";
 import { removeChart } from "@/store/storage";
 import { getChartValueForToday } from "@/utils/charts";
@@ -25,7 +25,7 @@ export default function Chart({
     const router = useRouter();
     const chart = useChart(id);
     const values = useChartValues(id);
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const hasValueForToday = getChartValueForToday(values);
 

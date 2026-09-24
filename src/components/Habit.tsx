@@ -2,10 +2,11 @@ import { ComponentProps, useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
+
 
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { ThemeColors } from "@/hooks/useThemeColor";
+import { useTranslate } from "@/platform/translations";
 import { useHabit } from "@/store/hooks";
 import { doHabit } from "@/store/storage";
 import { getDue, getStartOfDay } from "@/utils/time";
@@ -23,7 +24,7 @@ export default function Habit({
 }: Props) {
     const mutation = useStorageMutation();
     const habit = useHabit(id);
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const doCallback = useCallback(() => {

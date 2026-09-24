@@ -9,7 +9,7 @@ import { updateBirthday, removeBirthday } from '@/store/storage';
 import { getMonthAndDay, getMonthAndDayTimestamp } from '@/utils/time';
 
 jest.mock('expo-router', () => ({useLocalSearchParams: jest.fn(), useNavigation: jest.fn(), useRouter: jest.fn()}));
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string) => key]}));
+jest.mock("@/platform/translations", () => ({useTranslate: () => (key: string) => key}));
 jest.mock('@/hooks/useSmartLoading', () => jest.fn());
 jest.mock('@/hooks/useStorageMutation', () => jest.fn());
 jest.mock('@/store/hooks', () => ({useBirthday: jest.fn()}));

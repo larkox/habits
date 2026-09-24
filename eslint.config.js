@@ -20,7 +20,10 @@ module.exports = defineConfig([
                 paths: [
                     {name: 'expo-document-picker', message: 'Use @/platform/jsonFiles instead.'},
                     {name: 'expo-file-system', message: 'Use a platform adapter instead.'},
+                    {name: 'expo-localization', message: 'Use @/platform/localization instead.'},
                     {name: 'expo-sharing', message: 'Use @/platform/jsonFiles instead.'},
+                    {name: 'i18next', message: 'Use @/platform/translations instead.'},
+                    {name: 'react-i18next', message: 'Use @/platform/translations instead.'},
                 ],
             }],
             'import/order': ['error', {

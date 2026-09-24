@@ -6,7 +6,7 @@ import DataScreen from '@/app/(tabs)/data/index';
 import { pickJsonFile, shareJsonFile } from '@/platform/jsonFiles';
 import { createBackup, importBackup, parseBackupFile } from '@/store/backup';
 
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string) => key]}));
+jest.mock("@/platform/translations", () => ({useTranslate: () => (key: string) => key}));
 jest.mock('@/platform/jsonFiles', () => ({pickJsonFile: jest.fn(), shareJsonFile: jest.fn()}));
 jest.mock('@/store/backup', () => ({createBackup: jest.fn(), importBackup: jest.fn(), parseBackupFile: jest.fn()}));
 

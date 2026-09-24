@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 
 import { Stack, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import useStackTheme from '@/hooks/useStackTheme';
+import { useTranslate } from "@/platform/translations";
 
 function AddButton() {
     const router = useRouter();
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const goToAddScreen = useCallback(() => {
         router.navigate('/(details)/fridge/add')
@@ -23,7 +24,7 @@ function AddButton() {
 }
 
 export default function FridgeLayout() {
-    const [t] = useTranslation();
+    const t = useTranslate();
     const screenOptions = useStackTheme();
     return (
         <Stack screenOptions={screenOptions}>

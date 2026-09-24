@@ -1,10 +1,11 @@
 import { Stack } from 'expo-router';
 
 import useStackTheme from '@/hooks/useStackTheme';
-import '@/i18n/i18n';
+import useSystemLanguage from '@/i18n/useSystemLanguage';
 
 export default function RootLayout() {
     const screenOptions = useStackTheme();
+    useSystemLanguage();
 
     return (
         <Stack screenOptions={screenOptions}>

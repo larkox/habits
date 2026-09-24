@@ -2,9 +2,9 @@ import { ComponentProps, useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
 
 import { ThemeColors } from "@/hooks/useThemeColor";
+import { useTranslate } from "@/platform/translations";
 import { useBirthday } from "@/store/hooks";
 import { getDue, getNextMonthAndDay } from "@/utils/time";
 
@@ -19,7 +19,7 @@ export default function Birthday({
     id,
 }: Props) {
     const birthdate = useBirthday(id);
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const longPressCallback = useCallback(() => {

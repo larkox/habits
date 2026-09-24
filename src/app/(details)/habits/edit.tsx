@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import FormScreen from '@/components/base/FormScreen';
@@ -12,6 +12,7 @@ import View from '@/components/base/View';
 import HabitCalendar from '@/components/HabitCalendar';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { useHabit } from '@/store/hooks';
 import { removeHabit, updateHabit } from '@/store/storage';
 import type { Habit } from '@/types/model';
@@ -31,7 +32,7 @@ function SaveButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     return (
         <Button
@@ -64,7 +65,7 @@ function HabitForm({habit}: {habit: Habit}) {
     const [title, setTitle] = useState(habit.title)
     const [periodicity, setPeriodicity] = useState(habit.periodicity.toString());
     const [errors, setErrors] = useState<FormErrors>({});
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const save = useCallback(async () => {
         const normalizedTitle = normalizeRequiredText(title);

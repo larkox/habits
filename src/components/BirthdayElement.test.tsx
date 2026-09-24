@@ -11,7 +11,7 @@ import BirthdayElement from './BirthdayElement';
 jest.mock('@/store/hooks', () => ({useBirthday: jest.fn()}));
 jest.mock('@/utils/time', () => ({getDue: jest.fn(), getNextMonthAndDay: jest.fn()}));
 jest.mock('expo-router', () => ({useRouter: jest.fn()}));
-jest.mock('react-i18next', () => ({useTranslation: () => [(key: string, options?: {val?: number}) => options?.val === undefined ? key : `${key}:${options.val}`]}));
+jest.mock("@/platform/translations", () => ({useTranslate: () => (key: string, options?: {val?: number}) => options?.val === undefined ? key : `${key}:${options.val}`}));
 jest.mock('@/hooks/useStorageMutation', () => jest.fn());
 jest.mock('@/hooks/useThemeColor', () => ({useThemeColor: jest.fn()}));
 

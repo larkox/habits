@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { addChart } from '@/store/storage';
 import { normalizeRequiredText } from '@/utils/validation';
 
@@ -23,7 +24,7 @@ function AddButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
             
     return <Button
         text={t('charts.addChart.addButton')}
@@ -35,7 +36,7 @@ export default function AddChartScreen() {
     const mutation = useStorageMutation();
     const [errors, setErrors] = useState<FormErrors>({});
     const [title, setTitle] = useState('')
-    const [t] = useTranslation();
+    const t = useTranslate();
     const navigation = useNavigation();
     const router = useRouter();
 

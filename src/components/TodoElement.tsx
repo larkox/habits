@@ -2,10 +2,11 @@ import { ComponentProps, useCallback } from "react";
 import { Pressable } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
+
 
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { ThemeColors } from "@/hooks/useThemeColor";
+import { useTranslate } from "@/platform/translations";
 import { useTodo } from "@/store/hooks";
 import { removeTodo } from "@/store/storage";
 import { getDue } from "@/utils/time";
@@ -23,7 +24,7 @@ export default function Todo({
 }: Props) {
     const mutation = useStorageMutation();
     const todo = useTodo(id);
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const doneCallback = useCallback(() => {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import FormScreen from '@/components/base/FormScreen';
@@ -12,6 +12,7 @@ import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { useBirthday } from '@/store/hooks';
 import { removeBirthday, updateBirthday } from '@/store/storage';
 import type { Birthday } from '@/types/model';
@@ -32,7 +33,7 @@ function SaveButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     return (
         <Button
@@ -67,7 +68,7 @@ function BirthdayForm({birthday}: {birthday: Birthday}) {
     const [name, setName] = useState(birthday.name);
     const [date, setDate] = useState(getMonthAndDayTimestamp(birthday.date));
     const [yearString, setYearString] = useState(birthday.year.toString());
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const save = useCallback(async () => {
         const normalizedName = normalizeRequiredText(name);

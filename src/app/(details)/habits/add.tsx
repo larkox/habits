@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
 import View from '@/components/base/View';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { addHabit } from '@/store/storage';
 import { normalizeRequiredText, parsePositiveInteger } from '@/utils/validation';
 
@@ -25,7 +26,7 @@ function SaveButton({
     loading,
     onPress,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     return (
         <Button
@@ -41,7 +42,7 @@ export default function AddScreen() {
     const [title, setTitle] = useState('')
     const [periodicity, setPeriodicity] = useState('');
     const [errors, setErrors] = useState<FormErrors>({});
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const save = useCallback(async () => {

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+
 
 import Button from '@/components/base/Button';
 import Input from '@/components/base/Input';
@@ -10,6 +10,7 @@ import Loader from '@/components/base/Loader';
 import View from '@/components/base/View';
 import useSmartLoading from '@/hooks/useSmartLoading';
 import useStorageMutation from "@/hooks/useStorageMutation";
+import { useTranslate } from "@/platform/translations";
 import { useChartValues } from '@/store/hooks';
 import { setChartValue } from '@/store/storage';
 import { getChartValueForToday } from '@/utils/charts';
@@ -30,7 +31,7 @@ function SaveButton({
     onPress,
     isUpdate,
 }: SaveButtonProps) {
-    const [t] = useTranslation();
+    const t = useTranslate();
 
     const text = isUpdate ? t('charts.addValue.updateValueButton') : t('charts.addValue.addButton');
     return <Button
@@ -66,7 +67,7 @@ function ChartValueForm({chartId, initialValue}: ChartValueFormProps) {
     const mutation = useStorageMutation();
     const [errors, setErrors] = useState<FormErrors>({});
     const navigation = useNavigation();
-    const [t] = useTranslation();
+    const t = useTranslate();
     const router = useRouter();
 
     const [value, setValue] = useState(initialValue?.toString() ?? '');

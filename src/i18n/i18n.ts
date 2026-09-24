@@ -1,8 +1,7 @@
-import i18next from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import { initializeTranslations } from '@/platform/translations';
 
-import translationEn from './en/translation.json';
-import translationEs from './es/translation.json';
+import { getSystemLanguage, SUPPORTED_LANGUAGES } from './language';
+import { translationResources } from './resources';
 
 import '@formatjs/intl-getcanonicallocales/polyfill.js';
 
@@ -18,32 +17,16 @@ import '@formatjs/intl-relativetimeformat/polyfill.js';
 import '@formatjs/intl-relativetimeformat/locale-data/en.js';
 import '@formatjs/intl-relativetimeformat/locale-data/es.js';
 
-const resources = {
-    en: {
-        translation: translationEn,
-    },
-    es: {
-        translation: translationEs,
-    },
-};
+const resources = Object.fromEntries(
+    Object.entries(translationResources).map(([language, translation]) => [
+        language,
+        {translation},
+    ]),
+);
 
-// Ignore the lint warning, since this is the documented
-// way to use the library
-// eslint-disable-next-line import/no-named-as-default-member
-i18next
-    .use(initReactI18next)
-    .init({
-        resources,
-        fallbackLng: 'en',
-        supportedLngs: ['en', 'es'],
-        interpolation: {
-            escapeValue: false,
-        },
-        cleanCode: true,
-        ns: ['translation'],
-        defaultNS: 'translation',
-        compatibilityJSON: 'v4',
-    })
-    .then();
-
-export default i18next;
+initializeTranslations({
+    resources,
+    language: getSystemLanguage(),
+    fallbackLanguage: 'en',
+    supportedLanguages: SUPPORTED_LANGUAGES,
+});
