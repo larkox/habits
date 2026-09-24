@@ -2,8 +2,8 @@ import { useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 
 import { useRouter } from "expo-router";
-import { LineChart } from "react-native-gifted-charts";
 
+import BaseChart from "@/components/base/Chart";
 import useStorageMutation from "@/hooks/useStorageMutation";
 import { useTranslate } from "@/platform/translations";
 import { useChart, useChartValues } from "@/store/hooks";
@@ -61,7 +61,7 @@ export default function Chart({
             >
                 {chart.title}
             </Text>
-            <LineChart data={data}/>
+            <BaseChart data={data} />
             <View
                 color={'foreground'}
                 style={styles.buttonContainer}

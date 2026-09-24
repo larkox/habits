@@ -13,12 +13,10 @@ jest.mock('expo-router', () => ({useRouter: jest.fn()}));
 jest.mock('@/platform/translations', () => ({
     useTranslate: () => (key: string, options?: {val?: number}) => options?.val === undefined ? key : `${key}:${options.val}`,
 }));
-jest.mock('react-native-gifted-charts', () => ({
-    LineChart: (props: object) => {
-        const {createElement} = jest.requireActual<typeof import('react')>('react');
-        return createElement('LineChart', {...props, testID: 'line-chart'});
-    },
-}));
+jest.mock('@/components/base/Chart', () => (props: object) => {
+    const {createElement} = jest.requireActual<typeof import('react')>('react');
+    return createElement('BaseChart', {...props, testID: 'line-chart'});
+});
 jest.mock('@/hooks/useStorageMutation', () => jest.fn());
 jest.mock('@/hooks/useThemeColor', () => ({useThemeColor: jest.fn()}));
 jest.mock('@/store/hooks', () => ({useChart: jest.fn(), useChartValues: jest.fn()}));
