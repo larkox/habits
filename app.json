@@ -12,6 +12,7 @@
       "bundleIdentifier": "com.rubberyducky.habits"
     },
     "android": {
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundImage": "./assets/images/adaptive-icon-background.png"
@@ -34,7 +35,15 @@
           "backgroundColor": "#6BCFB7"
         }
       ],
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
+        }
+      ],
       "expo-sqlite",
       [
         "expo-font",
