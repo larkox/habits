@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.habits'
+    namespace 'com.rubberyducky.habits'
     defaultConfig {
-        applicationId 'com.anonymous.habits'
+        applicationId 'com.rubberyducky.habits'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

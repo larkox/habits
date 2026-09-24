@@ -1,4 +1,4 @@
-package com.anonymous.habits
+package com.rubberyducky.habits
 import com.facebook.react.common.assets.ReactFontManager
 
 import android.app.Application

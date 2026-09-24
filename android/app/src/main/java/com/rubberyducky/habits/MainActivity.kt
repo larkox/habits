@@ -1,4 +1,4 @@
-package com.anonymous.habits
+package com.rubberyducky.habits
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

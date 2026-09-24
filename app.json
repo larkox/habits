@@ -9,14 +9,14 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.habits"
+      "bundleIdentifier": "com.rubberyducky.habits"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundImage": "./assets/images/adaptive-icon-background.png"
       },
-      "package": "com.anonymous.habits"
+      "package": "com.rubberyducky.habits"
     },
     "web": {
       "bundler": "metro",

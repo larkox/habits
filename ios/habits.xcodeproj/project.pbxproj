@@ -273,7 +273,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anonymous.habits";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rubberyducky.habits";
 				PRODUCT_NAME = "habits";
 				SWIFT_OBJC_BRIDGING_HEADER = "habits/habits-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -303,7 +303,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.anonymous.habits";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rubberyducky.habits";
 				PRODUCT_NAME = "habits";
 				SWIFT_OBJC_BRIDGING_HEADER = "habits/habits-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

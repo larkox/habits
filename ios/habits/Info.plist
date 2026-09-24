@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>habits</string>
-          <string>com.anonymous.habits</string>
+          <string>com.rubberyducky.habits</string>
         </array>
       </dict>
     </array>

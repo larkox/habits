@@ -76,6 +76,6 @@ We may update this Privacy Policy when the App's features or data practices chan
 
 For privacy questions or requests concerning Habits, contact:
 
-**GitHub issues:** `https://github.com/OWNER/REPOSITORY/issues`
+**GitHub issues:** [github.com/larkox/habits/issues](https://github.com/larkox/habits/issues)
 
 Because your App records remain under your control on your device, please do not include sensitive information or exported backup files in an issue.
