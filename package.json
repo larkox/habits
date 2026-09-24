@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
+    "@react-native-community/cli": "^20.2.0",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@testing-library/react-native": "^14.0.1",
     "@types/better-sqlite3": "^9.6.0",
